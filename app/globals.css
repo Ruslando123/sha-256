@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Светлая (белая) тема по умолчанию: не переключаться по системной тёмной схеме. */
+@custom-variant dark (&:is(.force-dark, .force-dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -12,15 +15,14 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: only light;
+  background: #ffffff;
 }
 
 body {
-  background: var(--background);
+  background: #ffffff;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
 }
