@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SHA-256 Edu (SDU)
+
+Интерактивная лаборатория SHA-256 на Next.js: пошаговый разбор padding, расписания W, сжатия и эффекта лавины.
 
 ## Getting Started
 
@@ -29,8 +31,25 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Публикация в GitHub
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Создайте **пустой** репозиторий на GitHub (без README, без `.gitignore`, чтобы не было лишнего merge-коммита), например `sha-edu`.
+2. В корне проекта:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+git remote add origin https://github.com/<ВАШ_НИК>/<ИМЯ_РЕПО>.git
+git push -u origin main
+```
+
+Если репозиторий уже создан с README — сначала `git pull origin main --rebase`, затем `git push -u origin main`.
+
+Авторизация: [HTTPS + Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) или [SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh).
+
+## Деплой на Vercel
+
+1. Войдите на [vercel.com](https://vercel.com) через GitHub.
+2. **Add New… → Project** → **Import** ваш репозиторий.
+3. Framework Preset: **Next.js** (определится сам), Root Directory: `.`, Build: `next build`, Output: по умолчанию.
+4. **Deploy**. После сборки получите URL вида `https://<проект>.vercel.app`.
+
+Переменные окружения для этого проекта не обязательны. Каждый `git push` в `main` обычно даёт новый production deploy (если не отключили в настройках).
