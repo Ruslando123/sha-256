@@ -360,7 +360,7 @@ export default function BlockchainMiningPage() {
             <div className="mt-4 flex flex-wrap gap-2">
               <motion.button
                 type="button"
-                onClick={checkNonce}
+                onClick={() => checkNonce()}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 className={`rounded-lg bg-gradient-to-r ${theme.accent} px-4 py-2 text-sm font-medium text-white`}
