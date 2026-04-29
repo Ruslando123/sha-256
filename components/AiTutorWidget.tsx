@@ -49,13 +49,27 @@ export function AiTutorWidget() {
         }),
       });
 
+      const payload = (await res.json()) as {
+        answer?: string;
+        error?: string;
+        details?: string;
+      };
+
       if (!res.ok) {
-        throw new Error("request_failed");
+        const hint =
+          payload.error ||
+          (res.status === 500
+            ? "Сервер не настроен: в Vercel → Settings → Environment Variables должна быть переменная OPENAI_API_KEY для Production, затем Redeploy."
+            : "Сейчас не удалось обратиться к AI API. Попробуй снова чуть позже.");
+        setMessages((prev) => [
+          ...prev,
+          { role: "bot", text: hint },
+        ]);
+        return;
       }
 
-      const data = (await res.json()) as { answer?: string };
       const answer =
-        data.answer?.trim() ||
+        payload.answer?.trim() ||
         "Я не получил ответ от модели. Попробуй переформулировать вопрос или повтори позже.";
       setMessages((prev) => [...prev, { role: "bot", text: answer }]);
     } catch {
@@ -63,7 +77,7 @@ export function AiTutorWidget() {
         ...prev,
         {
           role: "bot",
-          text: "Сейчас не удалось обратиться к AI API. Проверь ключ OPENAI_API_KEY и попробуй снова.",
+          text: "Сеть или браузер прервал запрос. Проверь соединение и попробуй снова. Если на деплое — в Vercel укажи OPENAI_API_KEY и сделай Redeploy.",
         },
       ]);
     } finally {

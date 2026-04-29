@@ -84,7 +84,23 @@ export async function POST(req: Request) {
 
   if (!upstream.ok) {
     const errText = await upstream.text();
-    return Response.json({ error: "Upstream AI error", details: errText }, { status: 502 });
+    let userMessage = "OpenAI API вернул ошибку. Проверь OPENAI_API_KEY и OPENAI_MODEL";
+    try {
+      const j = JSON.parse(errText) as { error?: { message?: string; code?: string } };
+      const msg = j.error?.message ?? "";
+      if (upstream.status === 401 || /invalid.*api|incorrect.*key/i.test(msg)) {
+        userMessage =
+          "Ключ API отклонён: проверь, что в Vercel (Production) задана переменная OPENAI_API_KEY и сделан Redeploy.";
+      } else if (upstream.status === 404 || /model/i.test(msg)) {
+        userMessage = `Проверь OPENAI_MODEL (сейчас: ${model}) — у аккаунта OpenAI должен быть доступ к этой модели.`;
+      } else if (msg) {
+        userMessage = `OpenAI: ${msg}`;
+      }
+    } catch {
+      if (errText && errText.length < 400) userMessage = errText;
+    }
+    console.error("[ai-tutor] OpenAI error", upstream.status, errText.slice(0, 2000));
+    return Response.json({ error: userMessage, details: errText }, { status: 502 });
   }
 
   const data = (await upstream.json()) as unknown;
