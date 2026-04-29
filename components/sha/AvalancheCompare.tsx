@@ -70,14 +70,16 @@ export function AvalancheCompare() {
           />
         </label>
       </div>
-      <div className="mt-3 flex flex-wrap gap-2 text-xs">
-        <span className="rounded-full bg-zinc-100 px-3 py-1 font-mono dark:bg-zinc-800">
-          H(A) = {hexL.slice(0, 18)}…
-        </span>
-        <span className="rounded-full bg-zinc-100 px-3 py-1 font-mono dark:bg-zinc-800">
-          H(B) = {hexR.slice(0, 18)}…
-        </span>
-        <span className="rounded-full bg-cyan-100 px-3 py-1 font-medium text-cyan-950 dark:bg-cyan-900 dark:text-cyan-50">
+      <div className="mt-3 flex flex-col gap-3 text-xs">
+        <div key={`ha-${hexL}`} className="edu-avalanche-hash rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900/80">
+          <p className="mb-1 font-sans font-medium text-zinc-600 dark:text-zinc-400">H(A)</p>
+          <p className="break-all font-mono text-zinc-900 dark:text-zinc-100">{hexL}</p>
+        </div>
+        <div key={`hb-${hexR}`} className="edu-avalanche-hash rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900/80">
+          <p className="mb-1 font-sans font-medium text-zinc-600 dark:text-zinc-400">H(B)</p>
+          <p className="break-all font-mono text-zinc-900 dark:text-zinc-100">{hexR}</p>
+        </div>
+        <span className="inline-flex w-fit rounded-full bg-cyan-100 px-3 py-1 font-medium text-cyan-950 dark:bg-cyan-900 dark:text-cyan-50">
           XOR битов дайджеста: {hamming} / 256 ({pct}%)
         </span>
       </div>
@@ -86,10 +88,10 @@ export function AvalancheCompare() {
         <div className="flex flex-wrap gap-0.5 font-mono text-xs">
           {Array.from({ length: maxLen }, (_, i) => (
             <span
-              key={i}
+              key={`${i}-${left[i] ?? "∅"}-${right[i] ?? "∅"}`}
               className={
                 diffChars[i]
-                  ? "rounded bg-rose-200 px-0.5 text-rose-950 dark:bg-rose-900 dark:text-rose-50"
+                  ? "edu-avalanche-diff rounded bg-rose-200 px-0.5 text-rose-950 dark:bg-rose-900 dark:text-rose-50"
                   : "text-zinc-400"
               }
             >

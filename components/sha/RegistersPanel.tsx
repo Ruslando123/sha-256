@@ -19,6 +19,7 @@ function fmtBin32(x: number): string {
 }
 
 type RegistersPanelProps = {
+  stepIndex: number;
   a: number;
   b: number;
   c: number;
@@ -38,14 +39,32 @@ type RegistersPanelProps = {
     h: number;
   };
   binaryMode: boolean;
+  guidedFocus?: boolean;
 };
 
-export function RegistersPanel({ a, b, c, d, e, f, g, h, prev, binaryMode }: RegistersPanelProps) {
+export function RegistersPanel({
+  stepIndex,
+  a,
+  b,
+  c,
+  d,
+  e,
+  f,
+  g,
+  h,
+  prev,
+  binaryMode,
+  guidedFocus = false,
+}: RegistersPanelProps) {
   const vals = [a, b, c, d, e, f, g, h];
   const prevs = prev ? [prev.a, prev.b, prev.c, prev.d, prev.e, prev.f, prev.g, prev.h] : null;
 
   return (
-    <section className="rounded-xl border border-zinc-200 bg-zinc-50/80 p-4 dark:border-zinc-700 dark:bg-zinc-900/50">
+    <section
+      className={`rounded-xl border border-zinc-200 bg-zinc-50/80 p-4 transition-all dark:border-zinc-700 dark:bg-zinc-900/50 ${
+        guidedFocus ? "edu-panel-focus ring-2 ring-amber-300/70" : ""
+      }`}
+    >
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">Рабочие регистры</h3>
         <EduTooltip glossaryKey="mod32" label="mod 2³²" />
@@ -56,10 +75,10 @@ export function RegistersPanel({ a, b, c, d, e, f, g, h, prev, binaryMode }: Reg
           const changed = prevs && (v >>> 0) !== (prevs[i]! >>> 0);
           return (
             <div
-              key={name}
-              className={`rounded-lg border px-2 py-2 font-mono text-xs ${
+              key={changed ? `reg-${name}-s${stepIndex}` : `reg-${name}`}
+              className={`rounded-lg border px-2 py-2 font-mono text-xs transition-[border-color,background-color,box-shadow,transform] duration-300 ease-out ${
                 changed
-                  ? "border-amber-400 bg-amber-50 dark:border-amber-600 dark:bg-amber-950/40"
+                  ? "edu-register-changed edu-register-shift border-amber-400 bg-amber-50 dark:border-amber-600 dark:bg-amber-950/40"
                   : "border-zinc-200 bg-white dark:border-zinc-600 dark:bg-zinc-950"
               }`}
             >

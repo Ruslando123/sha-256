@@ -46,8 +46,13 @@ type StepNavigatorProps = {
   count: number;
   phase: ShaPhase;
   title: string;
+  isPlaying: boolean;
+  speed: number;
   onNext: () => void;
   onBack: () => void;
+  onSeek: (index: number) => void;
+  onTogglePlay: () => void;
+  onSpeedChange: (speed: number) => void;
   nextDisabled: boolean;
 };
 
@@ -56,8 +61,13 @@ export function StepNavigator({
   count,
   phase,
   title,
+  isPlaying,
+  speed,
   onNext,
   onBack,
+  onSeek,
+  onTogglePlay,
+  onSpeedChange,
   nextDisabled,
 }: StepNavigatorProps) {
   const bar = roughPhase(phase);
@@ -71,11 +81,36 @@ export function StepNavigator({
           шаг {index + 1} / {count}
         </span>
       </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={onTogglePlay}
+          aria-label={isPlaying ? "Поставить autoplay на паузу" : "Запустить autoplay"}
+          className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-xs font-medium text-zinc-800 disabled:opacity-40 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
+        >
+          {isPlaying ? "Пауза" : "Пуск"}
+        </button>
+        <div className="flex items-center gap-1 text-xs text-zinc-600 dark:text-zinc-300">
+          <span>Скорость</span>
+          {[1, 2, 4].map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => onSpeedChange(v)}
+              className={`rounded px-2 py-0.5 font-medium ${
+                speed === v ? "bg-cyan-100 text-cyan-900 dark:bg-cyan-900 dark:text-cyan-100" : "bg-zinc-100 dark:bg-zinc-800"
+              }`}
+            >
+              {v}x
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="flex gap-1">
         {segments.map((lab, i) => (
           <div
             key={lab}
-            className={`h-1 flex-1 rounded-full ${
+            className={`h-1 flex-1 rounded-full transition-colors duration-500 ease-out ${
               i <= bar ? "bg-cyan-600 dark:bg-cyan-500" : "bg-zinc-200 dark:bg-zinc-700"
             }`}
             title={lab}
@@ -85,6 +120,15 @@ export function StepNavigator({
       <p className="text-xs text-zinc-500">
         Фаза: <span className="font-medium text-zinc-700 dark:text-zinc-300">{phaseLabel(phase)}</span>
       </p>
+      <input
+        type="range"
+        min={0}
+        max={Math.max(0, count - 1)}
+        value={index}
+        onChange={(e) => onSeek(Number(e.target.value))}
+        aria-label="Позиция по шагам SHA-256"
+        className="w-full accent-cyan-600"
+      />
       <div className="flex flex-wrap gap-2">
         <button
           type="button"

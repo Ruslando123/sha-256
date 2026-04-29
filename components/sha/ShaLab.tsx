@@ -1,12 +1,8 @@
 "use client";
 
 import { glossaryText } from "@/content/glossary";
-import { hintAfterLeavingStep } from "@/content/stepHints";
 import { useSha256Steps } from "@/hooks/useSha256Steps";
-import { useCallback, useMemo, useState } from "react";
-import { AvalancheCompare } from "./AvalancheCompare";
-import { EduTooltip } from "./EduTooltip";
-import { ManualModeQuiz } from "./ManualModeQuiz";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MessageSchedulePanel } from "./MessageSchedulePanel";
 import { RegistersPanel } from "./RegistersPanel";
 import { RoundDetailPanel } from "./RoundDetailPanel";
@@ -24,25 +20,19 @@ function bytesPreviewHex(bytes: Uint8Array, max = 96): string {
 
 export function ShaLab() {
   const [inputText, setInputText] = useState("abc");
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [binaryMode, setBinaryMode] = useState(false);
-  const [manualMode, setManualMode] = useState(false);
-  const [manualPick, setManualPick] = useState<string | null>(null);
-  const [transitionHint, setTransitionHint] = useState<string | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   const message = useMemo(() => new TextEncoder().encode(inputText), [inputText]);
-  const { step, index, count, goNext, goBack, getStep, digestHex } = useSha256Steps(message);
+  const { step, index, count, goNext, goBack, setIndex, getStep, digestHex } = useSha256Steps(message);
 
   const handleNext = useCallback(() => {
-    if (step) {
-      setTransitionHint(hintAfterLeavingStep(step));
-    }
-    setManualPick(null);
     goNext();
-  }, [goNext, step]);
+  }, [goNext]);
 
   const handleBack = useCallback(() => {
-    setManualPick(null);
-    setTransitionHint(null);
     goBack();
   }, [goBack]);
 
@@ -61,11 +51,8 @@ export function ShaLab() {
         }
       : undefined;
 
-  const desc = step?.descriptionKey ? glossaryText(step.descriptionKey) : undefined;
-  const challenge = step?.manualChallenge;
-  const manualOk =
-    !manualMode || !challenge || manualPick === challenge.correctId;
-  const nextDisabled = !manualOk;
+  const desc = step?.descriptionKey ? glossaryText(step.descriptionKey) : null;
+  const nextDisabled = false;
 
   const highlightW =
     step?.phase === "schedule"
@@ -77,18 +64,25 @@ export function ShaLab() {
         ? step.scheduleIndex
         : undefined;
 
+  const registerFocus = step?.phase.startsWith("compress") ?? false;
+  const scheduleFocus = step?.phase === "schedule" || step?.phase === "parse_block";
+  const detailsFocus = step?.phase.startsWith("compress") || step?.phase === "block_finalize";
+
+  useEffect(() => {
+    if (!isPlaying || index >= count - 1) return;
+    const ms = Math.max(180, Math.floor(900 / playbackSpeed));
+    const timer = window.setTimeout(() => {
+      handleNext();
+    }, ms);
+    return () => window.clearTimeout(timer);
+  }, [count, handleNext, index, isPlaying, playbackSpeed]);
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 bg-white px-4 py-10 text-zinc-900">
       <header className="flex flex-col gap-2">
-        <p className="text-xs font-medium uppercase tracking-wider text-cyan-700">SDU University · лаборатория</p>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Интерактивное обучение SHA-256</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-zinc-900">SHA-256 Visualizer</h1>
         <p className="max-w-3xl text-sm leading-relaxed text-zinc-600">
-          Пошаговая демонстрация: padding, разбор блока, расписание W<sub>t</sub>, 64 раунда сжатия с подшагами.
-          Ввод кодируется в{" "}
-          <span className="font-medium text-zinc-800">UTF-8</span> (как в типичных приложениях). Константы{" "}
-          <EduTooltip glossaryKey="constants_kt" label="Kₜ" /> и сдвиги{" "}
-          <EduTooltip glossaryKey="rotr" label="ROTR" /> /{" "}
-          <EduTooltip glossaryKey="shr" label="SHR" /> можно открыть по клику.
+          Чистая визуализация этапов: Padding, Parse, W[t], Compress, Finalize и итоговый Digest.
         </p>
       </header>
 
@@ -98,28 +92,20 @@ export function ShaLab() {
           <textarea
             value={inputText}
             onChange={(e) => {
+              setIsPlaying(false);
               setInputText(e.target.value);
-              setTransitionHint(null);
             }}
             className="min-h-[100px] rounded-lg border border-zinc-300 bg-white p-3 font-mono text-sm text-zinc-900"
           />
         </label>
-        <div className="flex flex-wrap items-center gap-4 text-xs">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-700">
           <label className="flex cursor-pointer items-center gap-2">
-            <input
-              type="checkbox"
-              checked={binaryMode}
-              onChange={(e) => setBinaryMode(e.target.checked)}
-            />
-            <span>Регистры в двоичном виде</span>
+            <input type="checkbox" checked={binaryMode} onChange={(e) => setBinaryMode(e.target.checked)} />
+            <span>Показывать регистры в бинарном виде</span>
           </label>
           <label className="flex cursor-pointer items-center gap-2">
-            <input
-              type="checkbox"
-              checked={manualMode}
-              onChange={(e) => setManualMode(e.target.checked)}
-            />
-            <span>Ручной режим (тест на формулы)</span>
+            <input type="checkbox" checked={showDetails} onChange={(e) => setShowDetails(e.target.checked)} />
+            <span>Показывать детали формул</span>
           </label>
           <span className="text-zinc-500">
             Всего шагов для текущего ввода: <span className="font-mono font-medium">{count}</span>
@@ -134,90 +120,119 @@ export function ShaLab() {
             count={count}
             phase={step.phase}
             title={step.title}
+            isPlaying={isPlaying}
+            speed={playbackSpeed}
             onNext={handleNext}
             onBack={handleBack}
+            onSeek={(nextIndex) => {
+              setIsPlaying(false);
+              setIndex(nextIndex);
+            }}
+            onTogglePlay={() => setIsPlaying((v) => !v)}
+            onSpeedChange={setPlaybackSpeed}
             nextDisabled={nextDisabled}
           />
 
-          {transitionHint && (
-            <div
-              className="rounded-xl border-2 border-cyan-200 bg-white p-4 shadow-sm"
-              role="status"
-            >
-              <p className="text-xs font-semibold uppercase tracking-wide text-cyan-800">После шага</p>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-800">{transitionHint}</p>
+          <div key={index} className="edu-step-surface flex flex-col gap-6">
+            <section className="rounded-xl border border-cyan-200 bg-cyan-50/60 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-cyan-800">Что происходит сейчас</p>
+              <p className="mt-2 text-sm text-cyan-950">{step.title}</p>
+              {desc ? <p className="mt-1 text-sm text-cyan-900">{desc.body}</p> : null}
+            </section>
+
+            {step.phase === "padding" && step.paddedPreview && (
+              <div className="rounded-xl border border-zinc-200 bg-white p-4 text-xs">
+                <p className="mb-2 font-medium text-zinc-800">Превью дополненного сообщения (hex)</p>
+                <code className="break-all font-mono text-zinc-700">{bytesPreviewHex(step.paddedPreview)}</code>
+                {step.paddedLengthBytes !== undefined && (
+                  <p className="mt-2 text-zinc-500">
+                    Длина после padding: {step.paddedLengthBytes} байт ({step.paddedLengthBytes / 64} блок(ов) по 64
+                    байта)
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div className="grid gap-4 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                {step.phase === "schedule" || step.phase === "parse_block" ? (
+                  <MessageSchedulePanel W={step.W} highlightIndex={highlightW} guidedFocus={scheduleFocus} />
+                ) : step.phase.startsWith("compress") || step.phase === "block_finalize" ? (
+                  <RegistersPanel
+                    stepIndex={index}
+                    a={step.a}
+                    b={step.b}
+                    c={step.c}
+                    d={step.d}
+                    e={step.e}
+                    f={step.f}
+                    g={step.g}
+                    h={step.h}
+                    prev={prevRegs}
+                    binaryMode={binaryMode}
+                    guidedFocus={registerFocus}
+                  />
+                ) : (
+                  <div className="rounded-xl border border-zinc-200 bg-white p-4 text-sm text-zinc-600">
+                    Для этой фазы основная визуализация появится на следующих шагах.
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-4">
+                {showDetails && (
+                  <RoundDetailPanel
+                    round={step.round}
+                    K_t={step.K_t}
+                    s0={step.s0}
+                    s1={step.s1}
+                    Ch={step.Ch}
+                    Maj={step.Maj}
+                    T1={step.T1}
+                    T2={step.T2}
+                    guidedFocus={detailsFocus}
+                    phase={step.phase}
+                  />
+                )}
+
+                <div className="rounded-xl border border-zinc-200 bg-white p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Этапы</p>
+                  <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                    {[
+                      ["padding", "Padding"],
+                      ["parse_block", "Parse"],
+                      ["schedule", "W[t]"],
+                      ["compress_start", "Compress"],
+                      ["block_finalize", "H += state"],
+                      ["complete", "Digest"],
+                    ].map(([phaseName, label]) => {
+                      const active = phaseName === "compress_start" ? step.phase.startsWith("compress") : step.phase === phaseName;
+                      return (
+                        <span
+                          key={phaseName}
+                          className={`rounded-full px-3 py-1 ${active ? "bg-cyan-600 text-white" : "bg-zinc-100 text-zinc-600"}`}
+                        >
+                          {label}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
 
-          {desc && (
-            <article className="rounded-xl border border-cyan-100 bg-cyan-50/60 p-4 text-sm leading-relaxed text-cyan-950">
-              <h2 className="mb-1 font-semibold">{desc.title}</h2>
-              <p>{desc.body}</p>
-            </article>
-          )}
-
-          {step.phase === "padding" && step.paddedPreview && (
-            <div className="rounded-xl border border-zinc-200 bg-white p-4 text-xs">
-              <p className="mb-2 font-medium text-zinc-800">Превью дополненного сообщения (hex)</p>
-              <code className="break-all font-mono text-zinc-700">
-                {bytesPreviewHex(step.paddedPreview)}
-              </code>
-              {step.paddedLengthBytes !== undefined && (
-                <p className="mt-2 text-zinc-500">
-                  Длина после padding: {step.paddedLengthBytes} байт ({step.paddedLengthBytes / 64} блок(ов) по 64
-                  байта)
+            {step.phase === "complete" && step.digestHex && (
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-4">
+                <p className="text-sm font-medium text-emerald-900">Итоговый SHA-256</p>
+                <p className="mt-2 break-all font-mono text-sm text-emerald-950">{step.digestHex}</p>
+                <p className="mt-1 text-xs text-emerald-800">
+                  Совпадает с быстрым путём hashFull: {digestHex === step.digestHex ? "да" : "нет"}
                 </p>
-              )}
-            </div>
-          )}
-
-          <div className="grid gap-4 lg:grid-cols-2">
-            <RegistersPanel
-              a={step.a}
-              b={step.b}
-              c={step.c}
-              d={step.d}
-              e={step.e}
-              f={step.f}
-              g={step.g}
-              h={step.h}
-              prev={prevRegs}
-              binaryMode={binaryMode}
-            />
-            <MessageSchedulePanel W={step.W} highlightIndex={highlightW} />
+              </div>
+            )}
           </div>
-
-          <RoundDetailPanel
-            round={step.round}
-            K_t={step.K_t}
-            s0={step.s0}
-            s1={step.s1}
-            Ch={step.Ch}
-            Maj={step.Maj}
-            T1={step.T1}
-            T2={step.T2}
-          />
-
-          <ManualModeQuiz
-            enabled={manualMode}
-            challenge={challenge}
-            selectedId={manualPick}
-            onSelect={setManualPick}
-          />
-
-          {step.phase === "complete" && step.digestHex && (
-            <div className="rounded-xl border border-green-200 bg-green-50/80 p-4">
-              <p className="text-sm font-medium text-green-900">Итоговый SHA-256</p>
-              <p className="mt-2 break-all font-mono text-sm text-green-950">{step.digestHex}</p>
-              <p className="mt-1 text-xs text-green-800">
-                Совпадает с быстрым путём hashFull: {digestHex === step.digestHex ? "да" : "нет"}
-              </p>
-            </div>
-          )}
         </>
       )}
-
-      <AvalancheCompare />
     </div>
   );
 }
