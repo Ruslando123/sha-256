@@ -77,7 +77,7 @@ export function AiTutorWidget() {
   };
 
   return (
-    <div className="absolute right-3 top-128 z-20">
+    <div className="absolute right-3 top-160 z-20">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -96,7 +96,7 @@ export function AiTutorWidget() {
       </button>
 
       {open ? (
-        <div className="absolute bottom-full right-0 mb-2 w-[320px] rounded-2xl border border-zinc-200 bg-white p-3 shadow-xl">
+        <div className="absolute bottom-full right-0 mb-2 w-[420px] rounded-2xl border border-zinc-200 bg-white p-3 shadow-xl">
           <p className="text-sm font-semibold text-zinc-900">ИИ помощник по SHA-256</p>
           <div className="mt-2 max-h-64 space-y-2 overflow-y-auto rounded-lg bg-zinc-50 p-2 text-sm">
             {messages.map((m, idx) => (
