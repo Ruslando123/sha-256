@@ -1,0 +1,260 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+  .lm-wrap { background: #f0f4ff; border-radius: 16px; padding: 2rem; font-family: 'DM Sans', sans-serif; color: #1a1f3c; min-height: 520px; position: relative; overflow: hidden; }
+  .lm-wrap::after { content: ''; position: absolute; top: -80px; right: -80px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, #c7d9ff88 0%, transparent 70%); pointer-events: none; }
+  .lm-wrap::before { content: ''; position: absolute; bottom: -60px; left: -60px; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #d4f0e888 0%, transparent 70%); pointer-events: none; }
+  .lm-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+  .lm-logo { font-size: 20px; font-weight: 600; color: #3a5bef; letter-spacing: -0.5px; }
+  .lm-badge { font-size: 10px; font-weight: 500; background: #e8eeff; border: 1px solid #c0ccff; color: #3a5bef; padding: 3px 10px; border-radius: 20px; letter-spacing: 1px; }
+  .lm-breadcrumb { margin-left: auto; font-size: 11px; color: #8a93b8; }
+  .lm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .lm-card { background: #ffffff; border-radius: 12px; padding: 1.25rem; border: 1px solid #e0e8ff; box-shadow: 0 2px 12px #3a5bef11; }
+  .lm-card-accent { border-left: 3px solid #3a5bef; }
+  .lm-label { font-size: 10px; font-weight: 600; color: #8a93b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .lm-block-input { font-family: 'DM Mono', monospace; font-size: 13px; color: #1a1f3c; background: #f7f9ff; border: 1.5px solid #c0ccff; border-radius: 8px; padding: 10px 12px; width: 100%; box-sizing: border-box; outline: none; resize: none; line-height: 1.6; transition: border-color 0.2s, box-shadow 0.2s; }
+  .lm-block-input:focus { border-color: #3a5bef; box-shadow: 0 0 0 3px #3a5bef22; }
+  .lm-block-hint { font-size: 10px; color: #b0b8d8; margin-top: 5px; }
+  .lm-char-count { font-size: 10px; color: #b0b8d8; text-align: right; margin-top: 3px; }
+  .lm-nonce-big { font-size: 48px; font-weight: 600; color: #1a1f3c; letter-spacing: -2px; font-family: 'DM Mono', monospace; line-height: 1; }
+  .lm-hash-box { background: #f7f9ff; border: 1px solid #e0e8ff; border-radius: 8px; padding: 12px 14px; font-family: 'DM Mono', monospace; font-size: 11px; word-break: break-all; line-height: 2; }
+  .lm-hash-zero { color: #22c97a; font-weight: 600; background: #e8fff3; border-radius: 3px; padding: 0 2px; }
+  .lm-hash-rest { color: #a0aacf; }
+  .lm-diff-row { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+  .lm-diff-num { font-size: 40px; font-weight: 600; color: #f59e42; font-family: 'DM Mono', monospace; min-width: 48px; }
+  .lm-diff-bar { flex: 1; }
+  .lm-diff-pips { display: flex; gap: 5px; margin-top: 6px; }
+  .lm-pip { width: 12px; height: 6px; border-radius: 3px; background: #e0e8ff; transition: background 0.2s; }
+  .lm-pip.on { background: #f59e42; }
+  .lm-btns { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
+  .lm-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 8px 18px; border-radius: 8px; border: 1.5px solid #c0ccff; background: #fff; color: #3a5bef; cursor: pointer; transition: all 0.15s; }
+  .lm-btn:hover { background: #eef1ff; border-color: #3a5bef; }
+  .lm-btn.primary { background: #3a5bef; color: #fff; border-color: #3a5bef; }
+  .lm-btn.primary:hover { background: #2d4ad4; }
+  .lm-btn.danger { border-color: #ffc5c5; color: #e05050; }
+  .lm-btn.danger:hover { background: #fff0f0; }
+  .lm-metrics { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .lm-metric { background: #f7f9ff; border: 1px solid #e0e8ff; border-radius: 8px; padding: 10px; text-align: center; }
+  .lm-metric-val { font-size: 18px; font-weight: 600; color: #3a5bef; font-family: 'DM Mono', monospace; }
+  .lm-metric-label { font-size: 9px; color: #8a93b8; letter-spacing: 1.5px; margin-top: 2px; font-weight: 600; }
+  .lm-status { font-size: 12px; font-weight: 500; padding: 8px 14px; border-radius: 8px; margin-top: 10px; display: flex; align-items: center; gap: 8px; }
+  .lm-status.waiting { background: #f7f9ff; border: 1px solid #e0e8ff; color: #8a93b8; }
+  .lm-status.found { background: #e8fff3; border: 1px solid #22c97a; color: #16a660; }
+  .lm-dot-anim { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: currentColor; animation: blink 1s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .lm-sparkline { height: 40px; display: flex; align-items: flex-end; gap: 3px; margin-top: 10px; }
+  .lm-spark-bar { flex: 1; border-radius: 3px 3px 0 0; min-height: 2px; transition: height 0.3s; background: #c0ccff; }
+  .lm-exp-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f0f4ff; }
+  .lm-exp-label { font-size: 11px; color: #8a93b8; }
+  .lm-exp-val { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: #3a5bef; }
+  .lm-bar-fill { height: 4px; border-radius: 2px; background: linear-gradient(90deg, #3a5bef, #22c97a); margin-top: 3px; }
+</style>
+
+<div class="lm-wrap">
+  <h2 class="sr-only">Light-themed blockchain mining demo without nonce reel</h2>
+
+  <div class="lm-header">
+    <div class="lm-logo">⬡ SHA-256 Mining</div>
+    <div class="lm-badge">PROOF OF WORK</div>
+    <div class="lm-breadcrumb">SDU Edu · Interactive Demo</div>
+  </div>
+
+  <div class="lm-grid">
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+
+      <div class="lm-card lm-card-accent">
+        <div class="lm-label">Block data <span style="color:#3a5bef;font-size:9px;margin-left:6px;background:#e8eeff;padding:2px 8px;border-radius:10px;letter-spacing:1px;">EDITABLE</span></div>
+        <textarea class="lm-block-input" id="lm-blockdata" rows="2" maxlength="120" placeholder="Type your transaction here…">Alice → Bob: 1 BTC</textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="lm-block-hint">✏️ Edit block data — the hash will change completely</div>
+          <div class="lm-char-count"><span id="lm-charcount">19</span>/120</div>
+        </div>
+      </div>
+
+      <div class="lm-card">
+        <div class="lm-label">Nonce</div>
+        <div class="lm-nonce-big" id="lm-nonce">0</div>
+      </div>
+
+      <div class="lm-card">
+        <div class="lm-label">Difficulty</div>
+        <div class="lm-diff-row">
+          <div class="lm-diff-num" id="lm-diff">4</div>
+          <div class="lm-diff-bar">
+            <input type="range" min="1" max="8" value="4" id="lm-slider" style="width:100%">
+            <div class="lm-diff-pips" id="lm-pips"></div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#8a93b8;margin-top:6px;">Expected: <span id="lm-expected" style="color:#f59e42;font-weight:600;">65,536</span> attempts</div>
+      </div>
+
+      <div class="lm-btns">
+        <button class="lm-btn primary" id="lm-mine">▶ Mine</button>
+        <button class="lm-btn" id="lm-check">Check</button>
+        <button class="lm-btn danger" id="lm-stop">■ Stop</button>
+        <button class="lm-btn" id="lm-reset">↺ Reset</button>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+
+      <div class="lm-card">
+        <div class="lm-label">Hash output</div>
+        <div class="lm-hash-box">
+          <span class="lm-hash-zero" id="lm-zeros"></span><span class="lm-hash-rest" id="lm-rest">— press Mine to start —</span>
+        </div>
+        <div class="lm-status waiting" id="lm-status">
+          <div class="lm-dot-anim"></div><span>Searching for valid nonce…</span>
+        </div>
+      </div>
+
+      <div class="lm-card">
+        <div class="lm-label">Live metrics</div>
+        <div class="lm-metrics">
+          <div class="lm-metric"><div class="lm-metric-val" id="lm-att">0</div><div class="lm-metric-label">ATTEMPTS</div></div>
+          <div class="lm-metric"><div class="lm-metric-val" id="lm-rate">0</div><div class="lm-metric-label">H / S</div></div>
+          <div class="lm-metric"><div class="lm-metric-val" id="lm-time">0ms</div><div class="lm-metric-label">ELAPSED</div></div>
+        </div>
+        <div class="lm-sparkline" id="lm-spark">
+          <div class="lm-spark-bar" style="height:4px"></div><div class="lm-spark-bar" style="height:8px"></div>
+          <div class="lm-spark-bar" style="height:14px"></div><div class="lm-spark-bar" style="height:20px"></div>
+          <div class="lm-spark-bar" style="height:26px"></div><div class="lm-spark-bar" style="height:30px"></div>
+          <div class="lm-spark-bar" style="height:28px"></div><div class="lm-spark-bar" style="height:34px"></div>
+          <div class="lm-spark-bar" style="height:36px"></div><div class="lm-spark-bar" style="height:32px"></div>
+          <div class="lm-spark-bar" style="height:38px"></div><div class="lm-spark-bar" style="height:40px"></div>
+        </div>
+      </div>
+
+      <div class="lm-card">
+        <div class="lm-label">Difficulty scale</div>
+        <div id="lm-scale" style="margin-top:6px;"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const tries=[16,256,4096,65536,1048576,16777216,268435456,4294967296];
+const tlabels=['16','256','4K','65K','1M','16M','268M','4B'];
+
+function renderPips(d){
+  const el=document.getElementById('lm-pips');el.innerHTML='';
+  for(let i=0;i<8;i++){const p=document.createElement('div');p.className='lm-pip'+(i<d?' on':'');el.appendChild(p);}
+}
+function renderScale(){
+  const sc=document.getElementById('lm-scale');
+  const d=+document.getElementById('lm-slider').value;
+  const mx=Math.log10(tries[7]);sc.innerHTML='';
+  tries.forEach((t,i)=>{
+    const pct=Math.round((Math.log10(t)/mx)*100);
+    const active=i+1===d;
+    const row=document.createElement('div');row.className='lm-exp-row';
+    row.innerHTML=`<span class="lm-exp-label">d=${i+1}</span><div style="flex:1;margin:0 10px;"><div class="lm-bar-fill" style="width:${pct}%;opacity:${active?1:0.35}"></div></div><span class="lm-exp-val" style="color:${active?'#f59e42':'#a0aacf'}">${tlabels[i]}</span>`;
+    sc.appendChild(row);
+  });
+}
+renderPips(4);renderScale();
+
+document.getElementById('lm-slider').addEventListener('input',function(){
+  const d=+this.value;
+  document.getElementById('lm-diff').textContent=d;
+  document.getElementById('lm-expected').textContent=tries[d-1].toLocaleString();
+  renderPips(d);renderScale();resetState();
+});
+
+const blockInput=document.getElementById('lm-blockdata');
+const charCount=document.getElementById('lm-charcount');
+blockInput.addEventListener('input',function(){charCount.textContent=this.value.length;resetState();});
+charCount.textContent=blockInput.value.length;
+
+function strToSeed(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h)+s.charCodeAt(i);return h>>>0;}
+function fakeHash(n,d,seed){
+  const pseudo=((n*2654435761)^seed)>>>0;
+  const hex=pseudo.toString(16).padStart(8,'0');
+  if(n>0&&n%Math.pow(16,d)<2) return '0'.repeat(d)+hex+'9a3f2b1c7e4d8f0a';
+  return hex[0]+hex+'9a3f2b1c7e4d8f0a12345678';
+}
+
+let mining=false,nonce=0,attempts=0,startTime=null,raf=null,rates=[];
+
+function resetState(){
+  mining=false;if(raf)cancelAnimationFrame(raf);
+  nonce=0;attempts=0;rates=[];
+  document.getElementById('lm-nonce').textContent='0';
+  document.getElementById('lm-zeros').textContent='';
+  document.getElementById('lm-rest').textContent='— press Mine to start —';
+  document.getElementById('lm-att').textContent='0';
+  document.getElementById('lm-rate').textContent='0';
+  document.getElementById('lm-time').textContent='0ms';
+  const sb=document.getElementById('lm-status');
+  sb.className='lm-status waiting';
+  sb.innerHTML='<div class="lm-dot-anim"></div><span>Searching for valid nonce…</span>';
+}
+
+function updateSpark(){
+  const bars=document.querySelectorAll('.lm-spark-bar');
+  const mx=Math.max(...rates,1);
+  bars.forEach((b,i)=>{
+    const v=rates[i]||0;
+    b.style.height=Math.max(2,Math.round((v/mx)*40))+'px';
+    b.style.background=v>mx*0.7?'#22c97a':'#c0ccff';
+  });
+}
+
+function mineStep(){
+  if(!mining)return;
+  const d=+document.getElementById('lm-slider').value;
+  const seed=strToSeed(blockInput.value||'default');
+  for(let i=0;i<80;i++){
+    nonce++;attempts++;
+    const h=fakeHash(nonce,d,seed);
+    if(h.startsWith('0'.repeat(d))){showHash(h,d,true);mining=false;return;}
+  }
+  const now=Date.now();const elapsed=now-startTime;
+  const rate=elapsed>0?Math.round(attempts/(elapsed/1000)):0;
+  rates.push(rate);if(rates.length>12)rates.shift();
+  const h=fakeHash(nonce,d,seed);
+  document.getElementById('lm-nonce').textContent=nonce.toLocaleString();
+  const z=h.match(/^0*/)[0];
+  document.getElementById('lm-zeros').textContent=z||'';
+  document.getElementById('lm-rest').textContent=h.slice(z.length,z.length+22)+'...';
+  document.getElementById('lm-att').textContent=attempts>=1000?(attempts/1000).toFixed(1)+'k':attempts;
+  document.getElementById('lm-rate').textContent=rate>=1000?Math.round(rate/1000)+'k':rate;
+  document.getElementById('lm-time').textContent=elapsed<1000?elapsed+'ms':(elapsed/1000).toFixed(1)+'s';
+  updateSpark();
+  raf=requestAnimationFrame(mineStep);
+}
+
+function showHash(h,d,found){
+  const z='0'.repeat(d);
+  document.getElementById('lm-zeros').textContent=z;
+  document.getElementById('lm-rest').textContent=h.slice(d,d+22)+'...';
+  document.getElementById('lm-nonce').textContent=nonce.toLocaleString();
+  const sb=document.getElementById('lm-status');
+  if(found){sb.className='lm-status found';sb.innerHTML='<div class="lm-dot-anim"></div><span>Valid nonce found: '+nonce.toLocaleString()+'</span>';}
+}
+
+document.getElementById('lm-mine').onclick=function(){
+  if(mining)return;
+  mining=true;startTime=Date.now();
+  const sb=document.getElementById('lm-status');
+  sb.className='lm-status waiting';
+  sb.innerHTML='<div class="lm-dot-anim"></div><span>Searching for valid nonce…</span>';
+  raf=requestAnimationFrame(mineStep);
+};
+document.getElementById('lm-stop').onclick=function(){mining=false;if(raf)cancelAnimationFrame(raf);};
+document.getElementById('lm-reset').onclick=resetState;
+document.getElementById('lm-check').onclick=function(){
+  const d=+document.getElementById('lm-slider').value;
+  const seed=strToSeed(blockInput.value||'default');
+  const h=fakeHash(nonce,d,seed);
+  const found=h.startsWith('0'.repeat(d));
+  showHash(h,d,found);
+  if(!found){
+    const sb=document.getElementById('lm-status');
+    sb.className='lm-status waiting';
+    sb.innerHTML='<div class="lm-dot-anim"></div><span>Hash does not meet difficulty target</span>';
+  }
+};
+</script>

@@ -16,6 +16,17 @@ export default function Home() {
         </header>
 
         <section className="grid gap-4 md:grid-cols-2">
+          <Link
+            href="/learn"
+            className="rounded-xl border-2 border-cyan-300 bg-cyan-50 p-5 transition hover:border-cyan-500"
+          >
+            <p className="text-xs font-semibold uppercase tracking-wide text-cyan-700">Старт для новичка</p>
+            <p className="mt-1 text-sm font-semibold text-zinc-900">SHA-256: интерактивный учебник</p>
+            <p className="mt-1 text-sm text-zinc-700">
+              8 коротких уроков. Студент сам вводит данные, кликает операции и собирает формулы.
+            </p>
+          </Link>
+
           <Link href="/sha-lab" className="rounded-xl border border-zinc-200 bg-white p-5 transition hover:border-cyan-300">
             <p className="text-sm font-semibold text-zinc-900">SHA Visualizer</p>
             <p className="mt-1 text-sm text-zinc-600">Пошаговый разбор padding, W[t], compress и итогового digest.</p>
