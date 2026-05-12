@@ -4,7 +4,7 @@ import { H0, K } from "@/lib/sha256/constants";
 import { useState, type ReactNode } from "react";
 
 type Mode = "hex" | "dec" | "bin";
-type Op = "xor" | "and" | "or" | "add" | "rotr" | "not";
+type Op = "xor" | "and" | "or" | "add" | "rotr" | "shr" | "not";
 
 type DockPanel = "none" | "calc" | "tables";
 
@@ -14,6 +14,7 @@ const OP_LABELS: Record<Op, string> = {
   or: "OR (∨)",
   add: "ADD mod 2³²",
   rotr: "ROTR",
+  shr: "SHR",
   not: "NOT (¬)",
 };
 
@@ -51,6 +52,8 @@ function compute(a: number, b: number, op: Op): number {
       return (a + b) >>> 0;
     case "rotr":
       return ((a >>> (b & 31)) | (a << (32 - (b & 31)))) >>> 0;
+    case "shr":
+      return (a >>> (b & 31)) >>> 0;
     case "not":
       return ~a >>> 0;
   }
@@ -518,15 +521,15 @@ export function HexCalculator() {
           {op !== "not" && (
             <div>
               <div className="mb-1 flex items-center gap-1">
-                <span className="text-[11px] font-semibold text-zinc-500">B {op === "rotr" ? "(shift, bits)" : ""}</span>
-                {op !== "rotr" && modeBtn(modeB, "hex", "HEX", setModeB)}
-                {op !== "rotr" && modeBtn(modeB, "dec", "DEC", setModeB)}
-                {op !== "rotr" && modeBtn(modeB, "bin", "BIN", setModeB)}
+                <span className="text-[11px] font-semibold text-zinc-500">B {op === "rotr" || op === "shr" ? "(shift, bits)" : ""}</span>
+                {op !== "rotr" && op !== "shr" && modeBtn(modeB, "hex", "HEX", setModeB)}
+                {op !== "rotr" && op !== "shr" && modeBtn(modeB, "dec", "DEC", setModeB)}
+                {op !== "rotr" && op !== "shr" && modeBtn(modeB, "bin", "BIN", setModeB)}
               </div>
               <input
                 value={valueB}
                 onChange={(e) => setValueB(e.target.value)}
-                placeholder={op === "rotr" ? "7" : "0"}
+                placeholder={op === "rotr" || op === "shr" ? "7" : "0"}
                 className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 font-mono text-sm text-zinc-900 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
               />
             </div>
