@@ -211,8 +211,8 @@ function AlgorithmCard({ alg, onHover }: { alg: Algorithm; onHover: (id: string 
 
       <div className="grid grid-cols-2 gap-2">
         {[
-          { label: "Hash Size", value: `${alg.digestBits} бит` },
-          { label: "Block",     value: `${alg.blockBits} бит` },
+          { label: "Hash Size", value: `${alg.digestBits} bits` },
+          { label: "Block",     value: `${alg.blockBits} bits` },
           { label: "Rounds",    value: String(alg.rounds) },
           { label: "Speed",     value: `~${alg.speedMBps} MB/s` },
         ].map(({ label, value }) => (
@@ -241,14 +241,14 @@ function AlgorithmCard({ alg, onHover }: { alg: Algorithm; onHover: (id: string 
       </div>
 
       <div className="flex justify-between items-center text-sm">
-        <span className="text-zinc-500 text-xs">Уязв. к length extension</span>
+        <span className="text-zinc-500 text-xs">Length extension vulnerable</span>
         <span className={`text-xs font-medium ${alg.lengthExtension ? "text-amber-400" : "text-emerald-400"}`}>
           {alg.lengthExtension ? "Yes ⚠" : "No ✓"}
         </span>
       </div>
 
       <div>
-        <p className="text-xs uppercase tracking-wider text-zinc-600 mb-1.5">Применяется</p>
+        <p className="text-xs uppercase tracking-wider text-zinc-600 mb-1.5">Used in</p>
         <div className="flex flex-wrap gap-1">
           {alg.usages.map((u) => (
             <span key={u} className="rounded-full border border-zinc-200 bg-zinc-100 px-2 py-0.5 text-xs text-zinc-700">{u}</span>
@@ -407,7 +407,7 @@ function TryItTab() {
       <div className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-5">
         <div>
           <h2 className="text-lg font-bold text-zinc-900">✏️ Live Hasher</h2>
-          <p className="mt-1 text-sm text-zinc-600">Введите любой текст и посмотрите, как выглядит его хеш. Даже одна буква меняет всё!</p>
+          <p className="mt-1 text-sm text-zinc-600">Enter any text and see what its hash looks like. Even one letter changes everything!</p>
         </div>
         <input
           value={input}
@@ -488,19 +488,19 @@ function WhenToUseTab() {
             <p className="text-3xl mb-2">🚫</p>
             <p className="font-bold text-red-400 text-lg">Never</p>
             <p className="text-red-400 text-sm mt-1">MD5 · SHA-1</p>
-            <p className="text-zinc-500 text-xs mt-1">для безопасности</p>
+            <p className="text-zinc-500 text-xs mt-1">for security</p>
           </div>
           <div className="rounded-xl p-5 text-center" style={{ background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.25)" }}>
             <p className="text-3xl mb-2">✅</p>
             <p className="font-bold text-emerald-400 text-lg">Standard</p>
             <p className="text-emerald-400 text-sm mt-1">SHA-256</p>
-            <p className="text-zinc-500 text-xs mt-1">большинство задач</p>
+            <p className="text-zinc-500 text-xs mt-1">most tasks</p>
           </div>
           <div className="rounded-xl p-5 text-center" style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}>
             <p className="text-3xl mb-2">🚀</p>
             <p className="font-bold text-indigo-400 text-lg">The Future</p>
             <p className="text-indigo-400 text-sm mt-1">SHA3-256</p>
-            <p className="text-zinc-500 text-xs mt-1">новые проекты</p>
+            <p className="text-zinc-500 text-xs mt-1">new projects</p>
           </div>
         </div>
       </div>
@@ -623,7 +623,7 @@ export default function AlgorithmEvolutionPage() {
         {tab === "tryit"   && <TryItTab />}
         {tab === "whenuse" && <WhenToUseTab />}
 
-        <Link href="/" className="text-sm text-cyan-600 hover:underline self-start">← На главную</Link>
+        <Link href="/" className="text-sm text-cyan-600 hover:underline self-start">← Back to Home</Link>
       </div>
     </div>
   );

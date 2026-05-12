@@ -73,7 +73,7 @@ export function LessonShell({
             {index + 1}
           </span>
           <p className="text-xs font-semibold uppercase tracking-widest text-cyan-700">
-            Урок {index + 1} из {total}
+            Lesson {index + 1} of {total}
           </p>
         </div>
         <h2 className="text-xl font-semibold text-zinc-900">{title}</h2>
@@ -88,11 +88,11 @@ export function LessonShell({
         className="grid gap-3 md:grid-cols-2"
       >
         <div className="rounded-xl border border-cyan-200 bg-cyan-50/70 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-cyan-800">Простыми словами</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-cyan-800">In Simple Terms</p>
           <p className="mt-2 text-sm text-cyan-950">{simpleWords}</p>
         </div>
         <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-zinc-600">Зачем это нужно</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-zinc-600">Why It Matters</p>
           <p className="mt-2 text-sm text-zinc-800">{whyMatters}</p>
         </div>
       </motion.section>
@@ -106,7 +106,7 @@ export function LessonShell({
         className="rounded-xl border border-amber-200 bg-amber-50/50 p-4"
       >
         <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">
-          Твой ход: {taskTitle}
+          Your Turn: {taskTitle}
         </p>
         <div className="mt-3">{children}</div>
 
@@ -131,7 +131,7 @@ export function LessonShell({
               transition={{ duration: 0.2 }}
               className="mt-3 rounded-lg bg-rose-100 px-3 py-2 text-sm text-rose-900"
             >
-              Почти. {hintText}
+              Almost. {hintText}
             </motion.p>
           ) : null}
         </AnimatePresence>
@@ -151,7 +151,7 @@ export function LessonShell({
               >
                 ✓
               </motion.span>
-              <p className="text-xs font-medium text-emerald-700">Урок зачтён. Можно идти дальше.</p>
+              <p className="text-xs font-medium text-emerald-700">Lesson Complete. You can proceed.</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -172,7 +172,7 @@ export function LessonShell({
             disabled={!hasPrev}
             className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Назад
+            Back
           </button>
           {onReset ? (
             <button
@@ -180,7 +180,7 @@ export function LessonShell({
               onClick={onReset}
               className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
             >
-              Начать заново
+              Start Over
             </button>
           ) : null}
         </div>
@@ -191,9 +191,9 @@ export function LessonShell({
           whileHover={canGoNext && hasNext ? { scale: 1.03 } : {}}
           whileTap={canGoNext && hasNext ? { scale: 0.97 } : {}}
           className="rounded-lg bg-cyan-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-zinc-300"
-          title={!canGoNext ? "Сначала выполни задание" : undefined}
+          title={!canGoNext ? "Complete the task first" : undefined}
         >
-          {hasNext ? "Далее →" : "Финиш"}
+          {hasNext ? "Next →" : "Finish"}
         </motion.button>
       </motion.footer>
     </article>

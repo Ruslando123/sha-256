@@ -10,7 +10,7 @@ export async function benchmarkDigest(
   chunkSize = 1024 * 1024,
 ): Promise<BenchmarkResult> {
   if (!globalThis.crypto?.subtle) {
-    throw new Error("Web Crypto API недоступен в этом окружении.");
+    throw new Error("Web Crypto API is not available in this environment.");
   }
 
   const chunk = new Uint8Array(chunkSize);

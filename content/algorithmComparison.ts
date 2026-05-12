@@ -17,7 +17,7 @@ export const algorithmRows: AlgorithmRow[] = [
     digestBits: 128,
     referenceMBps: 850,
     security: "Broken",
-    note: "Коллизии строятся практически; для безопасности не использовать.",
+    note: "Collisions can be constructed practically; do not use for security.",
   },
   {
     id: "sha1",
@@ -25,7 +25,7 @@ export const algorithmRows: AlgorithmRow[] = [
     digestBits: 160,
     referenceMBps: 700,
     security: "Weak",
-    note: "Есть практические collision-атаки; для новых систем не рекомендуется.",
+    note: "Practical collision attacks exist; not recommended for new systems.",
     webCryptoName: "SHA-1",
   },
   {
@@ -34,7 +34,7 @@ export const algorithmRows: AlgorithmRow[] = [
     digestBits: 256,
     referenceMBps: 520,
     security: "Recommended",
-    note: "Стандартный выбор для большинства задач целостности и PoW-демо.",
+    note: "The standard choice for most integrity and PoW demo tasks.",
     webCryptoName: "SHA-256",
   },
   {
@@ -43,6 +43,6 @@ export const algorithmRows: AlgorithmRow[] = [
     digestBits: 256,
     referenceMBps: 300,
     security: "Recommended",
-    note: "Современная альтернатива на sponge-конструкции.",
+    note: "A modern alternative based on the sponge construction.",
   },
 ];

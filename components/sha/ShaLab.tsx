@@ -197,7 +197,7 @@ export function ShaLab() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="max-w-3xl text-sm leading-relaxed text-zinc-500"
           >
-            Пошаговая визуализация. Клавиши: Space — play, ← → — шаг, B — бинарный, D — детали.
+            Step-by-step visualization. Keys: Space — play, ← → — step, B — binary, D — details.
           </motion.p>
         </header>
 
@@ -209,12 +209,12 @@ export function ShaLab() {
           className="grid gap-4 rounded-2xl border border-zinc-200 bg-white/80 p-4 shadow-sm backdrop-blur-sm md:grid-cols-[1fr_200px]"
         >
           <label className="flex flex-col gap-2 text-sm">
-            <span className="font-medium text-zinc-700">Сообщение (text → UTF-8)</span>
+            <span className="font-medium text-zinc-700">Message (text → UTF-8)</span>
             <textarea
               value={inputText}
               onChange={(e) => { setIsPlaying(false); setInputText(e.target.value); }}
               className="min-h-[80px] rounded-lg border border-zinc-300 bg-zinc-50 p-3 font-mono text-sm text-zinc-900 placeholder:text-zinc-400 outline-none transition-all focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100"
-              placeholder="введи текст..."
+              placeholder="enter text..."
             />
             <div className="flex flex-wrap gap-1">
               {PRESETS.map((p) => (
@@ -333,12 +333,12 @@ export function ShaLab() {
                       className="overflow-hidden rounded-xl border border-zinc-200 bg-white/80 p-4 backdrop-blur-sm"
                     >
                       <div className="mb-3 flex flex-wrap items-center gap-4 text-xs">
-                        <p className="font-medium text-zinc-800">Padding блока ({step.paddedLengthBytes ?? step.paddedPreview.length} байт)</p>
+                        <p className="font-medium text-zinc-800">Block padding ({step.paddedLengthBytes ?? step.paddedPreview.length} bytes)</p>
                         <div className="flex gap-2 text-[10px]">
-                          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-cyan-300" /> данные</span>
+                          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-cyan-300" /> data</span>
                           <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-300" /> 0x80</span>
-                          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-zinc-200" /> нули</span>
-                          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-emerald-300" /> длина</span>
+                          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-zinc-200" /> zeros</span>
+                          <span className="inline-flex items-center gap-1"><span className="inline-block h-2.5 w-2.5 rounded-sm bg-emerald-300" /> length</span>
                         </div>
                       </div>
                       <div className="grid gap-1" style={{ gridTemplateColumns: "repeat(16, minmax(0, 1fr))" }}>
@@ -457,7 +457,7 @@ export function ShaLab() {
                           transition={{ duration: 0.25 }}
                         >
                           <div className="rounded-xl border border-zinc-200 bg-white/80 p-4 text-sm text-zinc-500 backdrop-blur-sm">
-                            Основная визуализация появится на следующих шагах.
+                            Main visualization will appear in the next steps.
                           </div>
                         </motion.div>
                       )}
@@ -477,7 +477,7 @@ export function ShaLab() {
                     )}
 
                     <div className="rounded-xl border border-zinc-200 bg-white/80 p-4 backdrop-blur-sm">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Этапы</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Phases</p>
                       <div className="mt-2 flex flex-wrap gap-2 text-xs">
                         {([
                           ["padding", "Padding"],
@@ -535,17 +535,17 @@ export function ShaLab() {
                       />
                       <div className="relative flex flex-col gap-4 md:flex-row md:items-start md:gap-6">
                         <div className="flex-1">
-                          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Итоговый SHA-256</p>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Final SHA-256</p>
                           <p className="mt-2 break-all font-mono text-sm leading-relaxed text-emerald-950">
                             {step.digestHex}
                           </p>
                           <p className="mt-1 text-xs text-emerald-800">
-                            Совпадает с hashFull: {digestHex === step.digestHex ? "да" : "нет"}
+                            Matches hashFull: {digestHex === step.digestHex ? "yes" : "no"}
                           </p>
                         </div>
                         {digestBits ? (
                           <div className="flex flex-col items-center gap-1">
-                            <p className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600">256 бит</p>
+                            <p className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600">256 bits</p>
                             <div className="grid gap-px" style={{ gridTemplateColumns: "repeat(16, 1fr)" }}>
                               {digestBits.map((bit, i) => (
                                 <motion.div

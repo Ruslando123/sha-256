@@ -99,16 +99,16 @@ export function AvalancheLesson(props: Props) {
     <LessonShell
       index={props.index}
       total={props.total}
-      title="Лавинный эффект"
-      simpleWords="Изменение даже одного бита в сообщении меняет примерно половину битов в хеше."
-      whyMatters="Это свойство делает SHA-256 устойчивым к подмене: подбирать «похожий» документ с тем же хешем практически невозможно."
-      taskTitle="Введи две похожие строки и угадай, сколько бит из 256 поменяется"
+      title="Avalanche effect"
+      simpleWords="Changing even a single bit in the message flips approximately half the bits in the hash."
+      whyMatters="This property makes SHA-256 resistant to tampering: finding a 'similar' document with the same hash is practically impossible."
+      taskTitle="Enter two similar strings and guess how many bits out of 256 will change"
       status={verdict ? verdict.status : "idle"}
-      successText={`В среднем меняется ~128 бит из 256. У тебя получилось ${verdict?.actual ?? 0}.`}
+      successText={`On average, ~128 out of 256 bits change. Your result: ${verdict?.actual ?? 0}.`}
       hintText={
         sameInput
-          ? "Сейчас строки одинаковые. Поменяй хотя бы одну букву."
-          : "Подсказка: обычно меняется около половины бит. Допустимая ошибка ±20."
+          ? "The strings are currently identical. Change at least one letter."
+          : "Hint: usually about half the bits change. Acceptable margin of error is ±20."
       }
       completed={props.completed}
       canGoNext={props.completed}
@@ -122,7 +122,7 @@ export function AvalancheLesson(props: Props) {
         {/* Input fields */}
         <div className="grid gap-3 md:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm">
-            <span className="font-medium text-zinc-800">Сообщение A</span>
+            <span className="font-medium text-zinc-800">Message A</span>
             <input
               value={textA}
               onChange={(e) => setTextA(e.target.value)}
@@ -130,7 +130,7 @@ export function AvalancheLesson(props: Props) {
             />
           </label>
           <label className="flex flex-col gap-2 text-sm">
-            <span className="font-medium text-zinc-800">Сообщение B</span>
+            <span className="font-medium text-zinc-800">Message B</span>
             <input
               value={textB}
               onChange={(e) => setTextB(e.target.value)}
@@ -173,14 +173,14 @@ export function AvalancheLesson(props: Props) {
         <div className="rounded-xl border border-zinc-200 bg-white p-3">
           <div className="mb-2 flex items-center justify-between">
             <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">
-              256 бит: карта отличий
+              256 bits: difference map
             </p>
             <div className="flex items-center gap-2 text-[10px]">
               <span className="flex items-center gap-1">
-                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-zinc-200" /> совпадает
+                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-zinc-200" /> matches
               </span>
               <span className="flex items-center gap-1">
-                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-rose-500" /> отличается
+                <span className="inline-block h-2.5 w-2.5 rounded-sm bg-rose-500" /> differs
               </span>
             </div>
           </div>
@@ -199,7 +199,7 @@ export function AvalancheLesson(props: Props) {
                   backgroundColor: { duration: 0.3 },
                 }}
                 className="aspect-square rounded-[2px]"
-                title={`bit ${i}: ${isDiff ? "отличается" : "совпадает"}`}
+                title={`bit ${i}: ${isDiff ? "differs" : "matches"}`}
               />
             ))}
           </div>
@@ -228,12 +228,12 @@ export function AvalancheLesson(props: Props) {
 
         {/* Guess input */}
         <label className="flex flex-col gap-2 text-sm">
-          <span className="font-medium text-zinc-800">Сколько бит из 256 поменяется (твоя догадка)?</span>
+          <span className="font-medium text-zinc-800">How many bits out of 256 will change (your guess)?</span>
           <input
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
             inputMode="numeric"
-            placeholder="например 128"
+            placeholder="e.g. 128"
             className="w-40 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition-colors focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100"
           />
         </label>
@@ -244,7 +244,7 @@ export function AvalancheLesson(props: Props) {
             disabled={sameInput || guess.length === 0}
             className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-700 disabled:cursor-not-allowed disabled:bg-zinc-300"
           >
-            Проверить
+            Check
           </button>
         </div>
       </div>

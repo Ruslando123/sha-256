@@ -84,15 +84,15 @@ export async function POST(req: Request) {
 
   if (!upstream.ok) {
     const errText = await upstream.text();
-    let userMessage = "OpenAI API вернул ошибку. Проверь OPENAI_API_KEY и OPENAI_MODEL";
+    let userMessage = "OpenAI API returned an error. Check OPENAI_API_KEY and OPENAI_MODEL";
     try {
       const j = JSON.parse(errText) as { error?: { message?: string; code?: string } };
       const msg = j.error?.message ?? "";
       if (upstream.status === 401 || /invalid.*api|incorrect.*key/i.test(msg)) {
         userMessage =
-          "Ключ API отклонён: проверь, что в Vercel (Production) задана переменная OPENAI_API_KEY и сделан Redeploy.";
+          "API key rejected: ensure OPENAI_API_KEY is set in Vercel (Production) and redeploy.";
       } else if (upstream.status === 404 || /model/i.test(msg)) {
-        userMessage = `Проверь OPENAI_MODEL (сейчас: ${model}) — у аккаунта OpenAI должен быть доступ к этой модели.`;
+        userMessage = `Check OPENAI_MODEL (current: ${model}) — your OpenAI account must have access to this model.`;
       } else if (msg) {
         userMessage = `OpenAI: ${msg}`;
       }
@@ -107,6 +107,6 @@ export async function POST(req: Request) {
   const answer = extractAnswerText(data);
 
   return Response.json({
-    answer: answer ?? "Не удалось получить ответ от модели.",
+    answer: answer ?? "Could not get a response from the model.",
   });
 }

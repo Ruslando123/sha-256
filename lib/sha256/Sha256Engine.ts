@@ -63,9 +63,9 @@ function t2UpdateChallenge(): ManualChallenge {
     type: "pick_formula",
     promptKey: "manual.t2_update",
     options: [
-      { id: "ok", label: "T₂ = Σ₀(a) + Maj(a,b,c); затем сдвиг регистров и a ← T₁ + T₂" },
-      { id: "wrong1", label: "T₂ = Σ₁(e) + Ch; a ← T₁ только" },
-      { id: "wrong2", label: "Регистры не сдвигаются до конца блока" },
+      { id: "ok", label: "T₂ = Σ₀(a) + Maj(a,b,c); then register shift and a ← T₁ + T₂" },
+      { id: "wrong1", label: "T₂ = Σ₁(e) + Ch; a ← T₁ only" },
+      { id: "wrong2", label: "Registers do not shift until end of block" },
       { id: "wrong3", label: "a ← Maj, e ← T₁" },
     ],
     correctId: "ok",
@@ -85,7 +85,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
   steps.push({
     index: index++,
     phase: "padding",
-    title: "Препроцессинг: дополнение (padding)",
+    title: "Preprocessing: padding",
     descriptionKey: "padding",
     blockIndex: 0,
     totalBlocks,
@@ -110,7 +110,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
     steps.push({
       index: index++,
       phase: "parse_block",
-      title: `Блок ${bi + 1}/${totalBlocks}: разбор на 16 слов M₀…M₁₅`,
+      title: `Block ${bi + 1}/${totalBlocks}: split into 16 words M₀…M₁₅`,
       descriptionKey: "parse_block",
       blockIndex: bi,
       totalBlocks,
@@ -138,7 +138,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
       steps.push({
         index: index++,
         phase: "schedule",
-        title: `Расписание сообщения: W[${t}]`,
+        title: `Message schedule: W[${t}]`,
         descriptionKey: t < 16 ? "schedule_w_low" : "schedule_w_high",
         blockIndex: bi,
         totalBlocks,
@@ -170,7 +170,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
     steps.push({
       index: index++,
       phase: "compress_start",
-      title: `Блок ${bi + 1}: начало сжатия (регистры = текущий H)`,
+      title: `Block ${bi + 1}: compression start (registers = current H)`,
       descriptionKey: "compress_start",
       blockIndex: bi,
       totalBlocks,
@@ -203,7 +203,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
       steps.push({
         index: index++,
         phase: "compress_ch_sig1",
-        title: `Раунд ${t + 1}/64: Σ₁(e) и Ch(e,f,g)`,
+        title: `Round ${t + 1}/64: Σ₁(e) and Ch(e,f,g)`,
         descriptionKey: "compress_ch_sig1",
         blockIndex: bi,
         totalBlocks,
@@ -241,7 +241,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
       steps.push({
         index: index++,
         phase: "compress_maj_sig0",
-        title: `Раунд ${t + 1}/64: Σ₀(a) и Maj(a,b,c)`,
+        title: `Round ${t + 1}/64: Σ₀(a) and Maj(a,b,c)`,
         descriptionKey: "compress_maj_sig0",
         blockIndex: bi,
         totalBlocks,
@@ -280,7 +280,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
       steps.push({
         index: index++,
         phase: "compress_t1",
-        title: `Раунд ${t + 1}/64: T₁ = h + Σ₁ + Ch + Kₜ + Wₜ`,
+        title: `Round ${t + 1}/64: T₁ = h + Σ₁ + Ch + Kₜ + Wₜ`,
         descriptionKey: "compress_t1",
         blockIndex: bi,
         totalBlocks,
@@ -322,7 +322,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
       steps.push({
         index: index++,
         phase: "compress_t2_update",
-        title: `Раунд ${t + 1}/64: T₂ и обновление регистров`,
+        title: `Round ${t + 1}/64: T₂ and register update`,
         descriptionKey: "compress_t2_update",
         blockIndex: bi,
         totalBlocks,
@@ -380,7 +380,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
     steps.push({
       index: index++,
       phase: "block_finalize",
-      title: `Блок ${bi + 1}: сложение с H (промежуточный дайджест)`,
+      title: `Block ${bi + 1}: add to H (intermediate digest)`,
       descriptionKey: "block_finalize",
       blockIndex: bi,
       totalBlocks,
@@ -401,7 +401,7 @@ export function buildSha256Steps(message: Uint8Array): ShaStepSnapshot[] {
   steps.push({
     index: index++,
     phase: "complete",
-    title: "Готово: SHA-256 дайджест",
+    title: "Done: SHA-256 digest",
     descriptionKey: "complete",
     blockIndex: totalBlocks - 1,
     totalBlocks,

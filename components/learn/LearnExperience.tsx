@@ -15,14 +15,14 @@ import { QuizLesson } from "./lessons/QuizLesson";
 import { ScheduleLesson } from "./lessons/ScheduleLesson";
 
 const LESSON_META = [
-  { id: "intro", title: "Что такое хеш", icon: "#" },
+  { id: "intro", title: "What is a Hash", icon: "#" },
   { id: "padding", title: "Padding", icon: "+" },
-  { id: "parse", title: "Парсинг блока", icon: "M" },
-  { id: "schedule", title: "Расписание W[t]", icon: "W" },
-  { id: "compression", title: "Раунд компрессии", icon: "σ" },
-  { id: "finalize", title: "Финализация", icon: "H" },
-  { id: "avalanche", title: "Лавинный эффект", icon: "~" },
-  { id: "quiz", title: "Финальный тест", icon: "?" },
+  { id: "parse", title: "Block Parsing", icon: "M" },
+  { id: "schedule", title: "Schedule W[t]", icon: "W" },
+  { id: "compression", title: "Compression Round", icon: "σ" },
+  { id: "finalize", title: "Finalization", icon: "H" },
+  { id: "avalanche", title: "Avalanche Effect", icon: "~" },
+  { id: "quiz", title: "Final Quiz", icon: "?" },
 ];
 
 export function LearnExperience() {
@@ -131,7 +131,7 @@ export function LearnExperience() {
       {/* Animated sidebar */}
       <aside className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm lg:sticky lg:top-6 lg:self-start">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Прогресс</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Progress</p>
           <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-zinc-100">
             <motion.div
               className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-emerald-500"
@@ -141,7 +141,7 @@ export function LearnExperience() {
           </div>
           <div className="mt-1.5 flex items-center justify-between">
             <p className="text-xs text-zinc-500">
-              {completed.size} из {total} пройдено
+              {completed.size} of {total} completed
             </p>
             <motion.span
               key={completed.size}
@@ -225,7 +225,7 @@ export function LearnExperience() {
           onClick={resetCourse}
           className="mt-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-xs font-medium text-zinc-600 transition-colors hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
         >
-          Сбросить прогресс
+          Reset progress
         </button>
       </aside>
 

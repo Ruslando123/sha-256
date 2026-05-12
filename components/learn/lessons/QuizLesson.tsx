@@ -39,23 +39,23 @@ const QUESTIONS: Question[] = [
   {
     id: "q1",
     kind: "fill",
-    prompt: "Какой ASCII-код (десятичный) у буквы 'b'?",
-    placeholder: "число",
+    prompt: "What is the ASCII code (decimal) of the letter 'b'?",
+    placeholder: "number",
     expected: ["98"],
-    explain: "В ASCII: a=97, b=98, c=99. Маленькие латинские буквы начинаются с 97.",
+    explain: "In ASCII: a=97, b=98, c=99. Lowercase Latin letters start at 97.",
   },
   {
     id: "q2",
     kind: "fill",
-    prompt: "Переведи число 255 в шестнадцатеричную систему (hex).",
-    placeholder: "hex без 0x",
+    prompt: "Convert the number 255 to hexadecimal (hex).",
+    placeholder: "hex without 0x",
     expected: ["ff"],
-    explain: "255 = 15×16 + 15 = FF₁₆. 15 в hex = F.",
+    explain: "255 = 15×16 + 15 = FF₁₆. 15 in hex = F.",
   },
   {
     id: "q3",
     kind: "choice",
-    prompt: "Сколько бит в одном блоке SHA-256?",
+    prompt: "How many bits are in one SHA-256 block?",
     options: [
       { id: "a", label: "128" },
       { id: "b", label: "256" },
@@ -63,49 +63,49 @@ const QUESTIONS: Question[] = [
       { id: "d", label: "1024" },
     ],
     correctId: "c",
-    explain: "Блок всегда 512 бит = 64 байта.",
+    explain: "A block is always 512 bits = 64 bytes.",
   },
   {
     id: "q4",
     kind: "fill",
-    prompt: "Какой байт (hex) ставится как разделитель в padding?",
-    placeholder: "hex без 0x",
+    prompt: "What byte (hex) is used as the separator in padding?",
+    placeholder: "hex without 0x",
     expected: ["80"],
-    explain: "Разделитель = 0x80 (двоичный: 10000000).",
+    explain: "Separator = 0x80 (binary: 10000000).",
   },
   {
     id: "q5",
     kind: "choice",
-    prompt: "Что делает операция Ch(e, f, g)?",
+    prompt: "What does the Ch(e, f, g) operation do?",
     options: [
-      { id: "a", label: "Складывает e + f + g" },
-      { id: "b", label: "Если бит e=1, берёт бит f; если e=0, берёт бит g" },
-      { id: "c", label: "Голосование большинства: 2 из 3 бит" },
-      { id: "d", label: "Циклический сдвиг e на f позиций" },
+      { id: "a", label: "Adds e + f + g" },
+      { id: "b", label: "If bit e=1, takes bit f; if e=0, takes bit g" },
+      { id: "c", label: "Majority vote: 2 out of 3 bits" },
+      { id: "d", label: "Circular shift of e by f positions" },
     ],
     correctId: "b",
-    explain: "Ch = Choice: бит e выбирает, откуда брать бит — из f или из g.",
+    explain: "Ch = Choice: bit e selects where to take the bit from — f or g.",
   },
   {
     id: "q6",
     kind: "fill",
-    prompt: "Сколько слов (W[t]) в полном расписании сообщения?",
-    placeholder: "число",
+    prompt: "How many words (W[t]) are in the full message schedule?",
+    placeholder: "number",
     expected: ["64"],
-    explain: "16 исходных + 48 расширенных = 64.",
+    explain: "16 original + 48 expanded = 64.",
   },
   {
     id: "q7",
     kind: "fill",
-    prompt: "Вычисли: 0x0A XOR 0x0F = ? (ответ в hex)",
-    placeholder: "hex без 0x",
+    prompt: "Compute: 0x0A XOR 0x0F = ? (answer in hex)",
+    placeholder: "hex without 0x",
     expected: ["05", "5"],
     explain: "0A = 00001010, 0F = 00001111. XOR → 00000101 = 05.",
   },
   {
     id: "q8",
     kind: "choice",
-    prompt: "Сколько раундов компрессии в SHA-256?",
+    prompt: "How many compression rounds are in SHA-256?",
     options: [
       { id: "a", label: "32" },
       { id: "b", label: "48" },
@@ -113,32 +113,32 @@ const QUESTIONS: Question[] = [
       { id: "d", label: "80" },
     ],
     correctId: "c",
-    explain: "Ровно 64 раунда на каждый блок.",
+    explain: "Exactly 64 rounds per block.",
   },
   {
     id: "q9",
     kind: "fill",
-    prompt: "Если поменять одну букву в сообщении, примерно сколько бит из 256 изменится в хеше?",
-    placeholder: "число",
-    expected: ["128", "~128", "около 128"],
-    explain: "В среднем половина (около 128 из 256) — это лавинный эффект.",
+    prompt: "If you change one letter in the message, approximately how many bits out of 256 will change in the hash?",
+    placeholder: "number",
+    expected: ["128", "~128", "about 128"],
+    explain: "On average, half (about 128 out of 256) — this is the avalanche effect.",
   },
   {
     id: "q10",
     kind: "fill",
-    prompt: "Вычисли: 0xFF + 0x01 mod 2³² = ? (ответ в hex)",
-    placeholder: "hex без 0x",
+    prompt: "Compute: 0xFF + 0x01 mod 2³² = ? (answer in hex)",
+    placeholder: "hex without 0x",
     expected: ["100"],
-    explain: "0xFF + 0x01 = 0x100. Это меньше 2³², поэтому результат = 0x100.",
+    explain: "0xFF + 0x01 = 0x100. That is less than 2³², so the result is 0x100.",
   },
 ];
 
 function badge(score: number, total: number): string {
   const pct = score / total;
-  if (pct >= 0.9) return "Мастер SHA-256";
-  if (pct >= 0.7) return "Знаток";
-  if (pct >= 0.5) return "Ученик";
-  return "Новичок";
+  if (pct >= 0.9) return "SHA-256 Master";
+  if (pct >= 0.7) return "Expert";
+  if (pct >= 0.5) return "Apprentice";
+  return "Beginner";
 }
 
 function isFillCorrect(value: string, expected: string[]): boolean {
@@ -189,13 +189,13 @@ export function QuizLesson(props: Props) {
     <LessonShell
       index={props.index}
       total={props.total}
-      title="Финальный тест"
-      simpleWords={`${QUESTIONS.length} вопросов: и выбор ответа, и вычисления. Проверь, что ты по-настоящему понимаешь SHA-256.`}
-      whyMatters={`Если наберёшь ${passingScore}+ из ${QUESTIONS.length} — можешь идти в SHA Visualizer и крутить настоящие данные.`}
-      taskTitle={`Ответь на ${QUESTIONS.length} вопросов (${passingScore}+ для прохождения)`}
+      title="Final quiz"
+      simpleWords={`${QUESTIONS.length} questions: both multiple choice and calculations. Test that you truly understand SHA-256.`}
+      whyMatters={`If you score ${passingScore}+ out of ${QUESTIONS.length} — you can head to the SHA Visualizer and work with real data.`}
+      taskTitle={`Answer ${QUESTIONS.length} questions (${passingScore}+ to pass)`}
       status={submitted ? (score >= passingScore ? "ok" : "fail") : "idle"}
-      successText={`Бейдж: ${badge(score, QUESTIONS.length)}. Счёт: ${score} из ${QUESTIONS.length}.`}
-      hintText={submitted && score < passingScore ? `Набрано ${score} из ${QUESTIONS.length}. Нужно минимум ${passingScore}. Проверь ответы — подсказки появились.` : ""}
+      successText={`Badge: ${badge(score, QUESTIONS.length)}. Score: ${score} out of ${QUESTIONS.length}.`}
+      hintText={submitted && score < passingScore ? `Score: ${score} out of ${QUESTIONS.length}. You need at least ${passingScore}. Review your answers — hints are now visible.` : ""}
       completed={props.completed}
       canGoNext={props.completed}
       hasNext={props.hasNext}
@@ -263,7 +263,7 @@ export function QuizLesson(props: Props) {
                     <input
                       value={answers[q.id] ?? ""}
                       onChange={(e) => setAnswer(q.id, e.target.value)}
-                      placeholder={q.placeholder ?? "Твой ответ"}
+                      placeholder={q.placeholder ?? "Your answer"}
                       className={`mt-2 w-full rounded-lg border px-3 py-2 font-mono text-sm outline-none ${
                         isCorrect
                           ? "border-emerald-400 bg-emerald-50 text-emerald-900"
@@ -291,11 +291,11 @@ export function QuizLesson(props: Props) {
           disabled={!allAnswered}
           className="rounded-lg bg-cyan-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:bg-zinc-300"
         >
-          Проверить тест
+          Submit quiz
         </button>
         {submitted && (
           <p className={`text-sm font-medium ${score >= passingScore ? "text-emerald-700" : "text-rose-700"}`}>
-            Результат: {score} / {QUESTIONS.length} — {badge(score, QUESTIONS.length)}
+            Result: {score} / {QUESTIONS.length} — {badge(score, QUESTIONS.length)}
           </p>
         )}
       </div>

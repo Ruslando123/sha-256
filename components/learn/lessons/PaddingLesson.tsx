@@ -69,7 +69,7 @@ export function PaddingLesson(props: Props) {
       setHint("");
     } else {
       setStatus("fail");
-      setHint("Неверно. Вспомни: в каждом байте 8 бит. Умножь количество байт на 8.");
+      setHint("Incorrect. Remember: each byte has 8 bits. Multiply the number of bytes by 8.");
     }
   };
 
@@ -82,7 +82,7 @@ export function PaddingLesson(props: Props) {
     } else {
       setStatus("fail");
       setHint(
-        "Не совсем. Блок = 64 байта. Вычти из 64 всё занятое: текст + 1 (разделитель) + 8 (длина). Оставшееся — нули.",
+        "Not quite. Block = 64 bytes. Subtract all occupied space from 64: text + 1 (separator) + 8 (length). The rest is zeros.",
       );
     }
   };
@@ -104,7 +104,7 @@ export function PaddingLesson(props: Props) {
     } else {
       setStatus("fail");
       setHint(
-        "Разделитель — один байт, в котором старший бит = 1, остальные = 0. Переведи двоичное 10000000 в hex.",
+        "The separator is a single byte where the most significant bit = 1, the rest = 0. Convert binary 10000000 to hex.",
       );
     }
   };
@@ -125,7 +125,7 @@ export function PaddingLesson(props: Props) {
     } else {
       setStatus("fail");
       setHint(
-        `Длина = ${expectedBits} бит. Переведи ${expectedBits} в hex: раздели на 16, частное — старшая цифра, остаток — младшая.`,
+        `Length = ${expectedBits} bits. Convert ${expectedBits} to hex: divide by 16, quotient is the high digit, remainder is the low digit.`,
       );
     }
   };
@@ -147,12 +147,12 @@ export function PaddingLesson(props: Props) {
     <LessonShell
       index={props.index}
       total={props.total}
-      title="Padding: подготовка сообщения"
-      simpleWords="Чтобы все блоки были одинакового размера (64 байта), к сообщению добавляют служебные байты: разделитель, нули и длину сообщения в самом конце."
-      whyMatters="Без padding алгоритм не знал бы, где кончается твой текст. Это защита от подмены и ошибок длины."
-      taskTitle={`Собери padding для слова "${SAMPLE}" — вычисли каждое значение сам`}
+      title="Padding: message preparation"
+      simpleWords="To make all blocks the same size (64 bytes), extra bytes are added to the message: a separator, zeros, and the message length at the very end."
+      whyMatters="Without padding, the algorithm wouldn't know where your text ends. This protects against tampering and length errors."
+      taskTitle={`Build the padding for the word "${SAMPLE}" — compute each value yourself`}
       status={isComplete ? "ok" : status === "fail" ? "fail" : "idle"}
-      successText="Отлично! Ты сам вычислил все значения и собрал padding. Именно так работает SHA-256."
+      successText="Excellent! You computed all the values and built the padding yourself. This is exactly how SHA-256 works."
       hintText={hint}
       completed={props.completed}
       canGoNext={props.completed}
@@ -166,7 +166,7 @@ export function PaddingLesson(props: Props) {
         {/* Block visualization */}
         <div>
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">
-            Блок 64 байта (заполняется по мере решения)
+            Block of 64 bytes (fills up as you solve)
           </p>
           <div className="grid grid-cols-8 gap-1 rounded-xl border border-zinc-200 bg-white p-3 font-mono text-xs">
             {cells.map((cell, i) => (
@@ -191,16 +191,16 @@ export function PaddingLesson(props: Props) {
           </div>
           <div className="mt-2 flex flex-wrap gap-3 text-[11px]">
             <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded bg-cyan-100" /> Текст
+              <span className="inline-block h-3 w-3 rounded bg-cyan-100" /> Text
             </span>
             <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded bg-amber-200" /> Разделитель
+              <span className="inline-block h-3 w-3 rounded bg-amber-200" /> Separator
             </span>
             <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded bg-zinc-200" /> Нули
+              <span className="inline-block h-3 w-3 rounded bg-zinc-200" /> Zeros
             </span>
             <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded bg-emerald-200" /> Длина
+              <span className="inline-block h-3 w-3 rounded bg-emerald-200" /> Length
             </span>
           </div>
         </div>
@@ -208,16 +208,16 @@ export function PaddingLesson(props: Props) {
         {/* Phase 1: calc bits */}
         <StepCard
           step={1}
-          title="Вычисли длину сообщения в битах"
+          title="Compute the message length in bits"
           active={phase === "calc-bits"}
           done={phaseNumber > 1}
           color="cyan"
         >
           <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
             <p className="text-xs text-zinc-600">
-              Текст: <code className="font-mono text-cyan-800">"{SAMPLE}"</code> = {message.length} байт
+              Text: <code className="font-mono text-cyan-800">"{SAMPLE}"</code> = {message.length} bytes
             </p>
-            <p className="mt-1 text-xs text-zinc-500">1 байт = 8 бит. Сколько бит всего?</p>
+            <p className="mt-1 text-xs text-zinc-500">1 byte = 8 bits. How many bits total?</p>
           </div>
           {phase === "calc-bits" ? (
             <div className="flex items-center gap-2">
@@ -228,35 +228,35 @@ export function PaddingLesson(props: Props) {
                 placeholder="?"
                 className="w-24 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-center font-mono text-sm outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100"
               />
-              <span className="text-sm text-zinc-500">бит</span>
+              <span className="text-sm text-zinc-500">bits</span>
               <button
                 type="button"
                 onClick={checkBits}
                 disabled={!bitsAnswer.trim()}
                 className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-cyan-700 disabled:bg-zinc-300"
               >
-                Проверить
+                Check
               </button>
             </div>
           ) : (
-            <p className="font-mono text-sm text-emerald-700">{message.length} × 8 = {expectedBits} бит ✓</p>
+            <p className="font-mono text-sm text-emerald-700">{message.length} × 8 = {expectedBits} bits ✓</p>
           )}
         </StepCard>
 
         {/* Phase 2: calc zeros */}
         <StepCard
           step={2}
-          title="Вычисли количество нулевых байтов"
+          title="Compute the number of zero bytes"
           active={phase === "calc-zeros"}
           done={phaseNumber > 2}
           color="emerald"
         >
           <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
-            <p className="text-xs text-zinc-600">Блок = 64 байта. Занято:</p>
+            <p className="text-xs text-zinc-600">Block = 64 bytes. Occupied:</p>
             <ul className="mt-1 space-y-0.5 text-xs text-zinc-500">
-              <li>• Текст: {message.length} байт</li>
-              <li>• Разделитель (0x80): 1 байт</li>
-              <li>• Длина в конце: 8 байт</li>
+              <li>• Text: {message.length} bytes</li>
+              <li>• Separator (0x80): 1 byte</li>
+              <li>• Length at the end: 8 bytes</li>
             </ul>
             <p className="mt-2 text-xs font-medium text-zinc-700">
               64 − ({message.length} + 1 + 8) = ?
@@ -271,36 +271,36 @@ export function PaddingLesson(props: Props) {
                 placeholder="?"
                 className="w-24 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-center font-mono text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
-              <span className="text-sm text-zinc-500">нулей</span>
+              <span className="text-sm text-zinc-500">zeros</span>
               <button
                 type="button"
                 onClick={checkZeros}
                 disabled={!zerosAnswer.trim()}
                 className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:bg-zinc-300"
               >
-                Проверить
+                Check
               </button>
             </div>
           ) : phaseNumber > 2 ? (
-            <p className="font-mono text-sm text-emerald-700">64 − {message.length + 9} = {expectedZeros} нулей ✓</p>
+            <p className="font-mono text-sm text-emerald-700">64 − {message.length + 9} = {expectedZeros} zeros ✓</p>
           ) : null}
         </StepCard>
 
         {/* Phase 3: type separator */}
         <StepCard
           step={3}
-          title="Запиши байт-разделитель в hex"
+          title="Write the separator byte in hex"
           active={phase === "type-sep"}
           done={phaseNumber > 3}
           color="amber"
         >
           <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
             <p className="text-xs text-zinc-600">
-              Разделитель — специальный байт, где <strong>старший бит = 1</strong>, остальные 7 бит = 0.
+              The separator is a special byte where the <strong>most significant bit = 1</strong>, remaining 7 bits = 0.
             </p>
-            <p className="mt-2 text-xs text-zinc-500">В двоичном: <code className="font-mono text-amber-700">1000 0000</code></p>
-            <p className="mt-1 text-xs text-zinc-500">Переведи это число в hex (шестнадцатеричную систему).</p>
-            <p className="mt-1 text-[11px] text-zinc-400">Подсказка: 1000₂ = 8₁₆, 0000₂ = 0₁₆</p>
+            <p className="mt-2 text-xs text-zinc-500">In binary: <code className="font-mono text-amber-700">1000 0000</code></p>
+            <p className="mt-1 text-xs text-zinc-500">Convert this number to hex.</p>
+            <p className="mt-1 text-[11px] text-zinc-400">Hint: 1000₂ = 8₁₆, 0000₂ = 0₁₆</p>
           </div>
           {phase === "type-sep" ? (
             <div className="flex items-center gap-2">
@@ -318,7 +318,7 @@ export function PaddingLesson(props: Props) {
                 disabled={!sepAnswer.trim()}
                 className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-amber-700 disabled:bg-zinc-300"
               >
-                Проверить
+                Check
               </button>
             </div>
           ) : phaseNumber > 3 ? (
@@ -329,20 +329,20 @@ export function PaddingLesson(props: Props) {
         {/* Phase 4: type length */}
         <StepCard
           step={4}
-          title="Запиши длину сообщения в hex"
+          title="Write the message length in hex"
           active={phase === "type-length"}
           done={phase === "done"}
           color="indigo"
         >
           <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
             <p className="text-xs text-zinc-600">
-              Последние 8 байтов блока = длина оригинального сообщения в битах (big-endian, 64-bit).
+              The last 8 bytes of the block = the original message length in bits (big-endian, 64-bit).
             </p>
             <p className="mt-1 text-xs text-zinc-500">
-              Длина = {expectedBits} бит. Переведи {expectedBits} в hex.
+              Length = {expectedBits} bits. Convert {expectedBits} to hex.
             </p>
             <p className="mt-1 text-[11px] text-zinc-400">
-              {expectedBits} ÷ 16 = {Math.floor(expectedBits / 16)} (остаток {expectedBits % 16}).
+              {expectedBits} ÷ 16 = {Math.floor(expectedBits / 16)} (remainder {expectedBits % 16}).
             </p>
           </div>
           {phase === "type-length" ? (
@@ -361,7 +361,7 @@ export function PaddingLesson(props: Props) {
                 disabled={!lengthAnswer.trim()}
                 className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:bg-zinc-300"
               >
-                Проверить
+                Check
               </button>
             </div>
           ) : phase === "done" ? (
@@ -372,21 +372,21 @@ export function PaddingLesson(props: Props) {
         {/* Done */}
         {phase === "done" && (
           <div className="rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4">
-            <p className="text-sm font-semibold text-emerald-800">Блок собран правильно!</p>
+            <p className="text-sm font-semibold text-emerald-800">Block assembled correctly!</p>
             <p className="mt-1 text-xs text-emerald-700">
-              Первые {message.length} байта — текст ({Array.from(message).map(b => `0x${toHex(b)}`).join(" ")}),
-              потом 0x80, затем {expectedZeros} нулей, и в последних 8 байтах — число {expectedBits} (0x{expectedLengthHex}).
+              First {message.length} bytes are text ({Array.from(message).map(b => `0x${toHex(b)}`).join(" ")}),
+              then 0x80, then {expectedZeros} zeros, and the last 8 bytes contain the number {expectedBits} (0x{expectedLengthHex}).
             </p>
           </div>
         )}
 
         {/* Reference */}
         <details className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700">
-          <summary className="cursor-pointer font-medium text-zinc-800">Формула padding</summary>
+          <summary className="cursor-pointer font-medium text-zinc-800">Padding formula</summary>
           <div className="mt-2 space-y-1 font-mono text-[11px]">
             <p>message || 0x80 || zeros || length_64bit</p>
-            <p>Длина нулей: (56 − len − 1) mod 64</p>
-            <p>length_64bit = длина оригинала в битах (big-endian, 8 байт)</p>
+            <p>Number of zeros: (56 − len − 1) mod 64</p>
+            <p>length_64bit = original length in bits (big-endian, 8 bytes)</p>
           </div>
         </details>
       </div>
@@ -438,7 +438,7 @@ function StepCard({
         <div className="flex w-full flex-col gap-2">
           <p className={`text-sm font-medium ${active || done ? "text-zinc-900" : "text-zinc-400"}`}>{title}</p>
           {(active || done) && children}
-          {!active && !done && <p className="text-xs text-zinc-400">Сначала реши предыдущие шаги</p>}
+          {!active && !done && <p className="text-xs text-zinc-400">Solve previous steps first</p>}
         </div>
       </div>
     </div>

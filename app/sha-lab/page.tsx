@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "SHA-256 Visualizer | SDU",
-  description: "Пошаговая визуализация SHA-256",
+  description: "Step-by-step SHA-256 visualization",
 };
 
 export default function ShaLabPage() {
@@ -12,10 +12,10 @@ export default function ShaLabPage() {
       <nav className="sticky top-0 z-30 border-b border-zinc-200/60 bg-white/70 px-4 py-2.5 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <Link href="/" className="text-sm font-medium text-cyan-700 transition-colors hover:text-cyan-900 hover:underline">
-            ← На главную
+            ← Home
           </Link>
           <Link href="/learn" className="text-sm font-medium text-cyan-700 transition-colors hover:text-cyan-900 hover:underline">
-            Интерактивный учебник →
+            Interactive Tutorial →
           </Link>
         </div>
       </nav>

@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SHA-256 Edu | SDU",
-  description: "Пошаговая визуализация алгоритма SHA-256",
+  description: "Step-by-step visualization of the SHA-256 algorithm",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="ru"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-white text-zinc-900`}
     >
       <body className="min-h-full flex flex-col bg-white text-zinc-900">{children}</body>

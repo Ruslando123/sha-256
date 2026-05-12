@@ -124,7 +124,7 @@ export function RegistersPanel({
       }`}
     >
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        <h3 className="text-sm font-semibold text-zinc-800">Рабочие регистры</h3>
+        <h3 className="text-sm font-semibold text-zinc-800">Working registers</h3>
         <EduTooltip glossaryKey="mod32" label="mod 2³²" />
         {changedIndices.size > 0 && (
           <motion.span

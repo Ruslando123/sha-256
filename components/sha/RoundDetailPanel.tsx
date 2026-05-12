@@ -70,7 +70,7 @@ export function RoundDetailPanel({
       }`}
     >
       <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-800">
-        Промежуточные значения
+        Intermediate values
         {round !== undefined ? (
           <motion.span
             key={round}
@@ -79,7 +79,7 @@ export function RoundDetailPanel({
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             className="rounded-full bg-zinc-100 px-2 py-0.5 font-mono text-xs font-normal text-zinc-500"
           >
-            раунд {round + 1}/64
+            round {round + 1}/64
           </motion.span>
         ) : null}
       </h3>

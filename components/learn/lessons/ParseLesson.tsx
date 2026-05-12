@@ -60,7 +60,7 @@ export function ParseLesson(props: Props) {
     } else {
       setStatus("fail");
       setHint(
-        `Подсказка: возьми байты с ${targetWordIdx * 4} по ${targetWordIdx * 4 + 3} из дополненного блока и соедини их слева направо.`,
+        `Hint: take bytes ${targetWordIdx * 4} through ${targetWordIdx * 4 + 3} from the padded block and concatenate them left to right.`,
       );
     }
   };
@@ -77,12 +77,12 @@ export function ParseLesson(props: Props) {
     <LessonShell
       index={props.index}
       total={props.total}
-      title="Разбор блока на 16 слов"
-      simpleWords="Один блок (64 байта) разбивается на 16 кусочков по 4 байта. Каждый кусочек называется словом — W[0], W[1], ..., W[15]. Ты склеиваешь 4 байта в одно 32-битное число."
-      whyMatters="С 32-битными словами удобно работать процессору. Из 16 слов потом получится 64 — расширенный список для перемешивания."
-      taskTitle={allDone ? "Все слова вычислены!" : `Вычисли W[${targetWordIdx}] из 4-х байтов`}
+      title="Parsing a block into 16 words"
+      simpleWords="One block (64 bytes) is split into 16 chunks of 4 bytes each. Each chunk is called a word — W[0], W[1], ..., W[15]. You concatenate 4 bytes into a single 32-bit number."
+      whyMatters="32-bit words are convenient for the CPU to work with. From 16 words, 64 will be produced later — an expanded schedule for mixing."
+      taskTitle={allDone ? "All words computed!" : `Compute W[${targetWordIdx}] from 4 bytes`}
       status={allDone ? "ok" : status === "fail" ? "fail" : status === "ok" ? "ok" : "idle"}
-      successText="Идеально! Ты разобрался, как 64 байта превращаются в 16 слов. Эти слова отправляются в расписание сообщения."
+      successText="Perfect! You figured out how 64 bytes turn into 16 words. These words are sent to the message schedule."
       hintText={hint}
       completed={props.completed}
       canGoNext={props.completed}
@@ -95,7 +95,7 @@ export function ParseLesson(props: Props) {
       <div className="flex flex-col gap-5">
         {/* Raw bytes visualization */}
         <div>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Блок (64 байта) — разбит на группы по 4</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Block (64 bytes) — split into groups of 4</p>
           <div className="overflow-x-auto rounded-xl border border-zinc-200 bg-white p-3">
             <div className="grid grid-cols-4 gap-y-1 gap-x-3 font-mono text-[11px]">
               {Array.from({ length: 16 }).map((_, wi) => {
@@ -155,14 +155,14 @@ export function ParseLesson(props: Props) {
               </span>
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-medium text-zinc-900">
-                  Склей 4 байта в одно 32-битное слово <strong>W[{targetWordIdx}]</strong>
+                  Concatenate 4 bytes into a single 32-bit word <strong>W[{targetWordIdx}]</strong>
                 </p>
                 <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
-                  <p className="text-xs text-zinc-600">Найди 4 байта в таблице выше и склей в одно число (big-endian):</p>
+                  <p className="text-xs text-zinc-600">Find the 4 bytes in the table above and concatenate them into one number (big-endian):</p>
                   <div className="mt-2 flex items-center gap-2">
                     {Array.from({ length: 4 }).map((_, bi) => (
                       <div key={bi} className="flex flex-col items-center gap-1">
-                        <span className="text-[10px] text-zinc-400">байт {targetWordIdx * 4 + bi}</span>
+                        <span className="text-[10px] text-zinc-400">byte {targetWordIdx * 4 + bi}</span>
                         <span className="rounded-lg bg-zinc-100 px-3 py-2 font-mono text-sm font-bold text-zinc-400">
                           ??
                         </span>
@@ -177,7 +177,7 @@ export function ParseLesson(props: Props) {
                     </div>
                   </div>
                   <p className="mt-2 text-[11px] text-zinc-500">
-                    Формула: W[i] = байт[i×4] || байт[i×4+1] || байт[i×4+2] || байт[i×4+3]
+                    Formula: W[i] = byte[i×4] || byte[i×4+1] || byte[i×4+2] || byte[i×4+3]
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -195,7 +195,7 @@ export function ParseLesson(props: Props) {
                     disabled={!answer.trim()}
                     className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-cyan-700 disabled:bg-zinc-300"
                   >
-                    Проверить
+                    Check
                   </button>
                 </div>
               </div>
@@ -222,14 +222,14 @@ export function ParseLesson(props: Props) {
             ))}
           </div>
           <span className="text-xs text-zinc-500">
-            {solved.size} из {COMPUTE_INDICES.length} вычислено
+            {solved.size} of {COMPUTE_INDICES.length} computed
           </span>
         </div>
 
         {/* Solved words table */}
         {allDone && (
           <div className="rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4">
-            <p className="mb-2 text-sm font-semibold text-emerald-800">Все 16 слов блока:</p>
+            <p className="mb-2 text-sm font-semibold text-emerald-800">All 16 words of the block:</p>
             <div className="grid grid-cols-2 gap-1 font-mono text-[11px] sm:grid-cols-4">
               {words.map((w, i) => (
                 <div key={i} className="rounded bg-white px-2 py-1 ring-1 ring-emerald-200">
@@ -243,12 +243,12 @@ export function ParseLesson(props: Props) {
 
         {/* Reference */}
         <details className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700">
-          <summary className="cursor-pointer font-medium text-zinc-800">Как работает big-endian</summary>
+          <summary className="cursor-pointer font-medium text-zinc-800">How big-endian works</summary>
           <div className="mt-2 space-y-1 text-[11px]">
-            <p>Big-endian = старший байт первый.</p>
-            <p className="font-mono">Пример: байты AA BB CC DD → слово 0xAABBCCDD</p>
-            <p>Каждый байт занимает 8 бит (2 hex-цифры), а слово — 32 бита (8 hex-цифр).</p>
-            <p>Формула: W[i] = byte[i×4] &lt;&lt; 24 | byte[i×4+1] &lt;&lt; 16 | byte[i×4+2] &lt;&lt; 8 | byte[i×4+3]</p>
+            <p>Big-endian = most significant byte first.</p>
+            <p className="font-mono">Example: bytes AA BB CC DD → word 0xAABBCCDD</p>
+            <p>Each byte is 8 bits (2 hex digits), and a word is 32 bits (8 hex digits).</p>
+            <p>Formula: W[i] = byte[i×4] &lt;&lt; 24 | byte[i×4+1] &lt;&lt; 16 | byte[i×4+2] &lt;&lt; 8 | byte[i×4+3]</p>
           </div>
         </details>
       </div>

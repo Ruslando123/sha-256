@@ -90,7 +90,7 @@ export function ScheduleLesson(props: Props) {
       setHint("");
     } else {
       setStatus("fail");
-      setHint("K[t], h и Ch — это из шага компрессии, не из расписания. Нужно выбрать 4 слагаемых из формулы W[t].");
+      setHint("K[t], h, and Ch are from the compression step, not from the schedule. You need to select 4 terms from the W[t] formula.");
     }
   };
 
@@ -116,7 +116,7 @@ export function ScheduleLesson(props: Props) {
     } else {
       setStatus("fail");
       setHint(
-        `Для t=16: W[t-2]=W[14], W[t-7]=W[9], W[t-15]=W[1], W[t-16]=W[0]. Посмотри таблицу значений.`,
+        `For t=16: W[t-2]=W[14], W[t-7]=W[9], W[t-15]=W[1], W[t-16]=W[0]. Check the values table.`,
       );
     }
   };
@@ -129,7 +129,7 @@ export function ScheduleLesson(props: Props) {
       setHint("");
     } else {
       setStatus("fail");
-      setHint("σ₀(W[1]) = ROTR⁷(W[1]) ⊕ ROTR¹⁸(W[1]) ⊕ SHR³(W[1]). Используй калькулятор для каждой операции отдельно.");
+      setHint("σ₀(W[1]) = ROTR⁷(W[1]) ⊕ ROTR¹⁸(W[1]) ⊕ SHR³(W[1]). Use the calculator for each operation separately.");
     }
   };
 
@@ -141,7 +141,7 @@ export function ScheduleLesson(props: Props) {
       setHint("");
     } else {
       setStatus("fail");
-      setHint("σ₁(W[14]) = ROTR¹⁷(W[14]) ⊕ ROTR¹⁹(W[14]) ⊕ SHR¹⁰(W[14]). Используй калькулятор для каждой операции.");
+      setHint("σ₁(W[14]) = ROTR¹⁷(W[14]) ⊕ ROTR¹⁹(W[14]) ⊕ SHR¹⁰(W[14]). Use the calculator for each operation.");
     }
   };
 
@@ -154,7 +154,7 @@ export function ScheduleLesson(props: Props) {
     } else {
       setStatus("fail");
       setHint(
-        "W[16] = σ₁ + W[9] + σ₀ + W[0] (mod 2³²). Сложи 4 числа и возьми остаток от 2³². Используй калькулятор!",
+        "W[16] = σ₁ + W[9] + σ₀ + W[0] (mod 2³²). Add all 4 numbers and take the remainder mod 2³². Use the calculator!",
       );
     }
   };
@@ -176,19 +176,19 @@ export function ScheduleLesson(props: Props) {
     <LessonShell
       index={props.index}
       total={props.total}
-      title="Расписание сообщения W[t]"
-      simpleWords="Из 16 исходных слов нужно получить 64. Каждое новое слово — сумма четырёх кусочков с маленькими перемешивателями σ₀ и σ₁. Здесь ты сам вычислишь W[16]."
-      whyMatters="Так каждый бит влияет на множество последующих слов. Без этого хеш был бы предсказуемым."
+      title="Message schedule W[t]"
+      simpleWords="From 16 original words, 64 must be produced. Each new word is a sum of four components with small mixers σ₀ and σ₁. Here you will compute W[16] yourself."
+      whyMatters="This way every bit affects many subsequent words. Without it, the hash would be predictable."
       taskTitle={
-        phase === "formula" ? "Шаг 1: Выбери 4 слагаемых формулы W[t]"
-        : phase === "identify" ? "Шаг 2: Найди нужные значения для t=16"
-        : phase === "compute-g0" ? "Шаг 3: Вычисли σ₀(W[1])"
-        : phase === "compute-g1" ? "Шаг 4: Вычисли σ₁(W[14])"
-        : phase === "compute-sum" ? "Шаг 5: Сложи всё и получи W[16]"
-        : "W[16] вычислен!"
+        phase === "formula" ? "Step 1: Select the 4 terms of the W[t] formula"
+        : phase === "identify" ? "Step 2: Find the required values for t=16"
+        : phase === "compute-g0" ? "Step 3: Compute σ₀(W[1])"
+        : phase === "compute-g1" ? "Step 4: Compute σ₁(W[14])"
+        : phase === "compute-sum" ? "Step 5: Add everything to get W[16]"
+        : "W[16] computed!"
       }
       status={isComplete ? "ok" : status}
-      successText={`Ты вычислил W[16] = 0x${toHex32(w16val)}. Так же вычисляются W[17]..W[63].`}
+      successText={`You computed W[16] = 0x${toHex32(w16val)}. W[17]..W[63] are computed the same way.`}
       hintText={hint}
       completed={props.completed}
       canGoNext={props.completed}
@@ -201,7 +201,7 @@ export function ScheduleLesson(props: Props) {
       <div className="flex flex-col gap-5">
         {/* W[0..15] reference table */}
         <details className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700" open={phaseNum >= 2 && phaseNum <= 5}>
-          <summary className="cursor-pointer font-medium text-zinc-800">Таблица W[0]..W[15] (из предыдущего урока)</summary>
+          <summary className="cursor-pointer font-medium text-zinc-800">Table W[0]..W[15] (from the previous lesson)</summary>
           <div className="mt-2 grid grid-cols-2 gap-1 font-mono text-[11px] sm:grid-cols-4">
             {W.map((w, i) => {
               const highlight = phaseNum >= 2 && [0, 1, 9, 14].includes(i);
@@ -218,7 +218,7 @@ export function ScheduleLesson(props: Props) {
         </details>
 
         {/* Phase 1: Formula */}
-        <PhaseCard step={1} title="Выбери 4 слагаемых формулы W[t] (t ≥ 16)" active={phase === "formula"} done={phaseNum > 1} color="cyan">
+        <PhaseCard step={1} title="Select the 4 terms of the W[t] formula (t ≥ 16)" active={phase === "formula"} done={phaseNum > 1} color="cyan">
           <p className="rounded-lg bg-white p-3 font-mono text-sm text-zinc-800 ring-1 ring-zinc-200">
             W[t] ={" "}
             {Array.from({ length: 4 }).map((_, i) => {
@@ -257,7 +257,7 @@ export function ScheduleLesson(props: Props) {
                 disabled={selected.length !== 4}
                 className="w-fit rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white disabled:bg-zinc-300"
               >
-                Проверить
+                Check
               </button>
             </>
           )}
@@ -267,11 +267,11 @@ export function ScheduleLesson(props: Props) {
         </PhaseCard>
 
         {/* Phase 2: Identify values for t=16 */}
-        <PhaseCard step={2} title="Подставь значения для t = 16" active={phase === "identify"} done={phaseNum > 2} color="indigo">
+        <PhaseCard step={2} title="Substitute the values for t = 16" active={phase === "identify"} done={phaseNum > 2} color="indigo">
           <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
             <p className="text-xs text-zinc-600 mb-2">
-              При t = 16: W[t-2] = W[14], W[t-7] = W[9], W[t-15] = W[1], W[t-16] = W[0].
-              Найди их значения в таблице выше и введи:
+              For t = 16: W[t-2] = W[14], W[t-7] = W[9], W[t-15] = W[1], W[t-16] = W[0].
+              Find their values in the table above and enter them:
             </p>
             <div className="grid gap-2 sm:grid-cols-2">
               {["W[t-2]", "W[t-7]", "W[t-15]", "W[t-16]"].map((label) => {
@@ -296,14 +296,14 @@ export function ScheduleLesson(props: Props) {
           </div>
           {phase === "identify" && (
             <button type="button" onClick={checkIdentify} className="w-fit rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white">
-              Проверить
+              Check
             </button>
           )}
-          {phaseNum > 2 && <p className="text-xs text-emerald-600">Значения найдены ✓</p>}
+          {phaseNum > 2 && <p className="text-xs text-emerald-600">Values found ✓</p>}
         </PhaseCard>
 
         {/* Phase 3: Compute σ₀ */}
-        <PhaseCard step={3} title="Вычисли σ₀(W[1])" active={phase === "compute-g0"} done={phaseNum > 3} color="amber">
+        <PhaseCard step={3} title="Compute σ₀(W[1])" active={phase === "compute-g0"} done={phaseNum > 3} color="amber">
           <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
             <p className="text-xs text-zinc-600">
               σ₀(x) = ROTR<sup>7</sup>(x) ⊕ ROTR<sup>18</sup>(x) ⊕ SHR<sup>3</sup>(x)
@@ -312,7 +312,7 @@ export function ScheduleLesson(props: Props) {
               x = W[1] = <code className="font-mono text-amber-700">0x{toHex32(W[1]!)}</code>
             </p>
             <p className="mt-1 text-[11px] text-zinc-400">
-              Используй калькулятор (кнопка внизу справа) — операции ROTR и XOR.
+              Use the calculator (button at the bottom right) — ROTR and XOR operations.
             </p>
           </div>
           {phase === "compute-g0" ? (
@@ -325,7 +325,7 @@ export function ScheduleLesson(props: Props) {
                 className="w-36 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-center font-mono text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
               />
               <button type="button" onClick={checkG0} disabled={!g0Answer.trim()} className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white disabled:bg-zinc-300">
-                Проверить
+                Check
               </button>
             </div>
           ) : phaseNum > 3 ? (
@@ -334,7 +334,7 @@ export function ScheduleLesson(props: Props) {
         </PhaseCard>
 
         {/* Phase 4: Compute σ₁ */}
-        <PhaseCard step={4} title="Вычисли σ₁(W[14])" active={phase === "compute-g1"} done={phaseNum > 4} color="rose">
+        <PhaseCard step={4} title="Compute σ₁(W[14])" active={phase === "compute-g1"} done={phaseNum > 4} color="rose">
           <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
             <p className="text-xs text-zinc-600">
               σ₁(x) = ROTR<sup>17</sup>(x) ⊕ ROTR<sup>19</sup>(x) ⊕ SHR<sup>10</sup>(x)
@@ -353,7 +353,7 @@ export function ScheduleLesson(props: Props) {
                 className="w-36 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-center font-mono text-sm outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-100"
               />
               <button type="button" onClick={checkG1} disabled={!g1Answer.trim()} className="rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white disabled:bg-zinc-300">
-                Проверить
+                Check
               </button>
             </div>
           ) : phaseNum > 4 ? (
@@ -362,7 +362,7 @@ export function ScheduleLesson(props: Props) {
         </PhaseCard>
 
         {/* Phase 5: Sum */}
-        <PhaseCard step={5} title="Сложи всё и получи W[16]" active={phase === "compute-sum"} done={phase === "done"} color="emerald">
+        <PhaseCard step={5} title="Add everything to get W[16]" active={phase === "compute-sum"} done={phase === "done"} color="emerald">
           <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
             <p className="text-xs text-zinc-600 mb-2">
               W[16] = σ₁(W[14]) + W[9] + σ₀(W[1]) + W[0] <span className="text-zinc-400">(mod 2³²)</span>
@@ -374,7 +374,7 @@ export function ScheduleLesson(props: Props) {
               <span className="text-zinc-600">W[0] = 0x{toHex32(W[0]!)}</span>
             </div>
             <p className="mt-2 text-[11px] text-zinc-400">
-              Сложи 4 числа. Если сумма больше 2³² (= 0x100000000), возьми остаток от деления.
+              Add 4 numbers. If the sum exceeds 2³² (= 0x100000000), take the remainder.
             </p>
           </div>
           {phase === "compute-sum" ? (
@@ -387,7 +387,7 @@ export function ScheduleLesson(props: Props) {
                 className="w-36 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-center font-mono text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
               />
               <button type="button" onClick={checkSum} disabled={!sumAnswer.trim()} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white disabled:bg-zinc-300">
-                Проверить
+                Check
               </button>
             </div>
           ) : phase === "done" ? (
@@ -397,12 +397,12 @@ export function ScheduleLesson(props: Props) {
 
         {/* Formula reference */}
         <details className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700">
-          <summary className="cursor-pointer font-medium text-zinc-800">Справка: σ₀ и σ₁</summary>
+          <summary className="cursor-pointer font-medium text-zinc-800">Reference: σ₀ and σ₁</summary>
           <div className="mt-2 space-y-1 font-mono text-[11px]">
             <p>σ₀(x) = ROTR⁷(x) ⊕ ROTR¹⁸(x) ⊕ SHR³(x)</p>
             <p>σ₁(x) = ROTR¹⁷(x) ⊕ ROTR¹⁹(x) ⊕ SHR¹⁰(x)</p>
-            <p>ROTR = циклический сдвиг вправо (биты заворачиваются)</p>
-            <p>SHR = логический сдвиг вправо (биты теряются, слева нули)</p>
+            <p>ROTR = circular right shift (bits wrap around)</p>
+            <p>SHR = logical right shift (bits are lost, zeros fill from the left)</p>
           </div>
         </details>
       </div>
@@ -451,7 +451,7 @@ function PhaseCard({
         <div className="flex w-full flex-col gap-2">
           <p className={`text-sm font-medium ${active || done ? "text-zinc-900" : "text-zinc-400"}`}>{title}</p>
           {(active || done) && children}
-          {!active && !done && <p className="text-xs text-zinc-400">Сначала реши предыдущие шаги</p>}
+          {!active && !done && <p className="text-xs text-zinc-400">Solve previous steps first</p>}
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ type EduTooltipProps = {
   className?: string;
 };
 
-/** Кликабельная метка: открывает модалку с пояснением из glossary. */
+/** Clickable label: opens a modal with the glossary explanation. */
 export function EduTooltip({ glossaryKey, label, className = "" }: EduTooltipProps) {
   const [open, setOpen] = useState(false);
   const entry = glossaryText(glossaryKey);
@@ -21,7 +21,7 @@ export function EduTooltip({ glossaryKey, label, className = "" }: EduTooltipPro
         type="button"
         onClick={() => setOpen(true)}
         className={`inline cursor-help border-b border-dotted border-cyan-600 text-cyan-700 hover:text-cyan-900 dark:border-cyan-400 dark:text-cyan-300 dark:hover:text-cyan-100 ${className}`}
-        title="Подробнее"
+        title="Learn more"
       >
         {label}
       </button>

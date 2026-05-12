@@ -1,9 +1,9 @@
 export const miningDemoCopy = {
-  title: "SHA-256 в блокчейне: Mining Demo",
+  title: "SHA-256 in Blockchain: Mining Demo",
   intro:
-    "Попробуйте подобрать nonce так, чтобы хеш блока начинался с заданного количества нулей. Так работает базовая идея Proof of Work.",
+    "Try to find a nonce such that the block hash starts with a given number of zeros. This is the basic idea behind Proof of Work.",
   disclaimer:
-    "Это учебная модель. Реальный майнинг учитывает заголовок блока, target и сетевую сложность.",
+    "This is an educational model. Real mining takes into account the block header, target, and network difficulty.",
 };
 
 export const difficultyLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;

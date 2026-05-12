@@ -162,7 +162,7 @@ export function RoundDiagram({
     <div className="rounded-xl border border-zinc-200 bg-white/90 p-3 backdrop-blur-sm">
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-zinc-600">
-          Схема раунда сжатия
+          Compression round diagram
           {round !== undefined && (
             <span className="ml-2 font-mono font-normal text-zinc-400">
               round {round + 1}/64

@@ -142,7 +142,7 @@ export function StepNavigator({
               onClick={onBack}
               disabled={index <= 0}
               className="group relative flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-all hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700 active:scale-90 disabled:opacity-30 disabled:hover:border-zinc-200 disabled:hover:bg-white"
-              title="Назад (←)"
+              title="Back (←)"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
@@ -192,7 +192,7 @@ export function StepNavigator({
               onClick={onNext}
               disabled={index >= count - 1 || nextDisabled}
               className="group relative flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-600 transition-all hover:border-cyan-300 hover:bg-cyan-50 hover:text-cyan-700 active:scale-90 disabled:opacity-30 disabled:hover:border-zinc-200 disabled:hover:bg-white"
-              title="Далее (→)"
+              title="Next (→)"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M16 18h2V6h-2zM4 6v12l8.5-6z" />

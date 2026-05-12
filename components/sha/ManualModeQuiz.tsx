@@ -24,7 +24,7 @@ export function ManualModeQuiz({
   if (!enabled) {
     return (
       <section className="rounded-xl border border-dashed border-zinc-200 bg-zinc-50/50 p-4 text-xs text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900/30">
-        Ручной режим выключен: шаги проходят без выбора формулы.
+        Manual mode is off: steps advance without choosing a formula.
       </section>
     );
   }
@@ -32,7 +32,7 @@ export function ManualModeQuiz({
   if (!challenge) {
     return (
       <section className="rounded-xl border border-zinc-200 bg-zinc-50/50 p-3 text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-400">
-        На этом шаге нет теста — «Далее» доступна сразу.
+        No quiz on this step — Next is available immediately.
       </section>
     );
   }
@@ -43,19 +43,19 @@ export function ManualModeQuiz({
   return (
     <section className="rounded-xl border border-amber-200 bg-amber-50/80 p-4 dark:border-amber-900 dark:bg-amber-950/30">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-amber-950 dark:text-amber-100">Ручной режим</h3>
+        <h3 className="text-sm font-semibold text-amber-950 dark:text-amber-100">Manual mode</h3>
         {help && (
           <button
             type="button"
             onClick={() => setHelpOpen(true)}
             className="text-xs font-medium text-amber-800 underline dark:text-amber-300"
           >
-            Подсказка
+            Hint
           </button>
         )}
       </div>
       <p className="mb-3 text-xs text-amber-900 dark:text-amber-200">
-        Выберите верный вариант для этого подшага. Кнопка «Далее» доступна только при правильном ответе.
+        Pick the correct option for this sub-step. The Next button is only enabled after a correct answer.
       </p>
       <ul className="flex flex-col gap-2">
         {challenge.options.map((opt) => {
@@ -79,8 +79,8 @@ export function ManualModeQuiz({
           );
         })}
       </ul>
-      {wrong && <p className="mt-2 text-xs font-medium text-red-700 dark:text-red-400">Неверно, попробуйте снова.</p>}
-      {correct && <p className="mt-2 text-xs font-medium text-green-700 dark:text-green-400">Верно — можно идти дальше.</p>}
+      {wrong && <p className="mt-2 text-xs font-medium text-red-700 dark:text-red-400">Incorrect — try again.</p>}
+      {correct && <p className="mt-2 text-xs font-medium text-green-700 dark:text-green-400">Correct — you can proceed.</p>}
       {help && (
         <Modal open={helpOpen} title={help.title} onClose={() => setHelpOpen(false)}>
           <p>{help.body}</p>

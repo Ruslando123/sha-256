@@ -47,14 +47,14 @@ export function AvalancheCompare() {
 
   return (
     <section className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-950">
-      <h3 className="mb-2 text-sm font-semibold text-zinc-800 dark:text-zinc-100">Эффект лавины</h3>
+      <h3 className="mb-2 text-sm font-semibold text-zinc-800 dark:text-zinc-100">Avalanche effect</h3>
       <p className="mb-4 text-xs text-zinc-600 dark:text-zinc-400">
-        Сравните два ввода в UTF-8. Даже одна буква меняет весь 256-битный хеш; ниже — расстояние Хэмминга между
-        дайджестами и подсветка отличающихся символов строки.
+        Compare two UTF-8 inputs. Even one letter changes the entire 256-bit hash; below is the Hamming distance between
+        digests and highlighting of differing characters in the strings.
       </p>
       <div className="grid gap-4 md:grid-cols-2">
         <label className="flex flex-col gap-1 text-xs">
-          <span className="font-medium text-zinc-700 dark:text-zinc-300">Ввод A ({lenL} байт UTF-8)</span>
+          <span className="font-medium text-zinc-700 dark:text-zinc-300">Input A ({lenL} UTF-8 bytes)</span>
           <textarea
             value={left}
             onChange={(e) => setLeft(e.target.value)}
@@ -62,7 +62,7 @@ export function AvalancheCompare() {
           />
         </label>
         <label className="flex flex-col gap-1 text-xs">
-          <span className="font-medium text-zinc-700 dark:text-zinc-300">Ввод B ({lenR} байт UTF-8)</span>
+          <span className="font-medium text-zinc-700 dark:text-zinc-300">Input B ({lenR} UTF-8 bytes)</span>
           <textarea
             value={right}
             onChange={(e) => setRight(e.target.value)}
@@ -80,11 +80,11 @@ export function AvalancheCompare() {
           <p className="break-all font-mono text-zinc-900 dark:text-zinc-100">{hexR}</p>
         </div>
         <span className="inline-flex w-fit rounded-full bg-cyan-100 px-3 py-1 font-medium text-cyan-950 dark:bg-cyan-900 dark:text-cyan-50">
-          XOR битов дайджеста: {hamming} / 256 ({pct}%)
+          Digest XOR bits: {hamming} / 256 ({pct}%)
         </span>
       </div>
       <div className="mt-4">
-        <p className="mb-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">Символы ввода (позиция отличается)</p>
+        <p className="mb-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">Input characters (position differs)</p>
         <div className="flex flex-wrap gap-0.5 font-mono text-xs">
           {Array.from({ length: maxLen }, (_, i) => (
             <span

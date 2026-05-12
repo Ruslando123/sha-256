@@ -38,7 +38,7 @@ export function Modal({ open, title, children, onClose }: ModalProps) {
             onClick={onClose}
             className="rounded-lg px-2 py-1 text-sm text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
           >
-            Закрыть
+            Close
           </button>
         </div>
         <div className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">{children}</div>

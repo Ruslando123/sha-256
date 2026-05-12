@@ -223,13 +223,13 @@ function AnimatedFormattedProbability({ probability }: { probability: number }) 
 
 function SecurityBadge({ probability }: { probability: number }) {
   let color = "bg-emerald-600";
-  let label = "Безопасно";
+  let label = "Safe";
   if (probability >= 0.1) {
     color = "bg-red-500";
-    label = "Уязвимо";
+    label = "Vulnerable";
   } else if (probability >= 0.001) {
     color = "bg-amber-500";
-    label = "Риск";
+    label = "Risk";
   }
   const reduceMotion = useReducedMotion();
   return (
@@ -276,10 +276,10 @@ function BirthdayCollisionPipeline({
   );
 
   const stepMap: { label: string; colorActive: string }[] = [
-    { label: "Ввод данных", colorActive: "bg-cyan-500 text-white border-cyan-600" },
-    { label: "Хэширование", colorActive: "bg-violet-500 text-white border-violet-600" },
-    { label: "Атака/Анализ", colorActive: "bg-rose-500 text-white border-rose-600" },
-    { label: "Результат", colorActive: "bg-emerald-500 text-white border-emerald-600" },
+    { label: "Input Data", colorActive: "bg-cyan-500 text-white border-cyan-600" },
+    { label: "Hashing", colorActive: "bg-violet-500 text-white border-violet-600" },
+    { label: "Attack/Analysis", colorActive: "bg-rose-500 text-white border-rose-600" },
+    { label: "Result", colorActive: "bg-emerald-500 text-white border-emerald-600" },
   ];
 
   let activeStep = 0;
@@ -367,7 +367,7 @@ function BirthdayFormulaReveal({ formula }: { formula: string }) {
     >
       <summary className="cursor-pointer list-none px-3 py-2.5 font-medium text-zinc-800 transition-colors hover:bg-white/90 focus:outline-cyan-400 group-open:text-cyan-700 group-open:underline [&::-webkit-details-marker]:hidden">
         <span className="inline-flex items-center gap-2">
-          Показать формулу вероятности
+          Show probability formula
           <motion.span
             initial={false}
             animate={{ rotate: open ? 90 : 0 }}
@@ -466,7 +466,7 @@ export default function SecurityAnalysisPage() {
               transition={{ delay: reduceMotion ? 0 : 0.2, duration: 0.5 }}
               className="mt-0.5 text-xs font-medium text-zinc-500"
             >
-              Birthday bound · коллизии · оценка риска
+              Birthday bound · collisions · risk assessment
             </motion.p>
           </div>
           <MotionLink
@@ -475,11 +475,11 @@ export default function SecurityAnalysisPage() {
             whileTap={reduceMotion ? undefined : { scale: 0.98 }}
             className="shrink-0 text-sm font-medium text-cyan-700 transition-colors hover:text-cyan-900 hover:underline"
           >
-            ← На главную
+            ← Back to Home
           </MotionLink>
         </nav>
 
-        {/* Updated: Section - Collision resistance и Birthday paradox */}
+        {/* Updated: Section - Collision Resistance and Birthday Paradox */}
         <AnimatedSection
           delay={0.03}
           className="rounded-2xl border border-sky-100 bg-gradient-to-br from-sky-50 via-cyan-50 to-lime-50 p-6 shadow-sm"
@@ -494,7 +494,7 @@ export default function SecurityAnalysisPage() {
               🎂
             </motion.span>
             <div className="min-w-0 flex-1">
-              <h2 className="text-sm font-semibold text-zinc-900">Collision resistance и Birthday paradox</h2>
+              <h2 className="text-sm font-semibold text-zinc-900">Collision Resistance and Birthday Paradox</h2>
               <p className="mt-2 text-sm text-zinc-700">{securityAnalysisCopy.birthdayIntro}</p>
               {/* Formula reveal: Modern animated gradient block */}
               <BirthdayFormulaReveal formula={securityAnalysisCopy.birthdayFormula} />
@@ -503,10 +503,10 @@ export default function SecurityAnalysisPage() {
         </AnimatedSection>
 
         <section className="grid gap-4 lg:grid-cols-3">
-          {/* Updated: Card - Интерактивная оценка коллизии */}
+          {/* Updated: Card - Interactive Collision Assessment */}
           <AnimatedCard className="relative overflow-hidden rounded-2xl border border-sky-100 bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 p-6 shadow-sm lg:col-span-2">
             <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-gradient-to-br from-cyan-200/40 to-transparent blur-2xl" />
-            <h3 className="relative text-sm font-semibold text-zinc-900">Интерактивная оценка коллизии</h3>
+            <h3 className="relative text-sm font-semibold text-zinc-900">Interactive Collision Assessment</h3>
             <BirthdayCollisionPipeline bits={bits} logMessages={logMessages} loading={computingPulse} />
 
             <div className="mt-2 grid gap-3 md:grid-cols-2">
@@ -515,7 +515,7 @@ export default function SecurityAnalysisPage() {
                 whileHover={reduceMotion ? undefined : { scale: 1.015 }}
                 transition={{ type: "spring", duration: 0.23 }}
               >
-                <span className="font-medium text-zinc-800">Размер дайджеста (n)</span>
+                <span className="font-medium text-zinc-800">Digest size (n)</span>
                 <select
                   value={bits}
                   onChange={(e) => setBits(Number(e.target.value))}
@@ -523,7 +523,7 @@ export default function SecurityAnalysisPage() {
                 >
                   {digestBitOptions.map((option) => (
                     <option key={option} value={option}>
-                      {option} бит
+                      {option} bits
                     </option>
                   ))}
                 </select>
@@ -533,7 +533,7 @@ export default function SecurityAnalysisPage() {
                 whileHover={reduceMotion ? undefined : { scale: 1.015 }}
                 transition={{ type: "spring", duration: 0.23 }}
               >
-                <span className="font-medium text-zinc-800">Число сообщений k = 10^x</span>
+                <span className="font-medium text-zinc-800">Number of messages k = 10^x</span>
                 <input
                   type="range"
                   min={1}
@@ -559,9 +559,9 @@ export default function SecurityAnalysisPage() {
               }}
             >
               <AnimatePresence mode="wait">{computingPulse ? <ComputingShimmer key="shimmer" /> : null}</AnimatePresence>
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Результат</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Result</p>
               <p className="mt-1 text-sm text-zinc-700">
-                Для <span className="font-mono">{messages.toExponential(2)}</span> сообщений и n={bits} бит:
+                For <span className="font-mono">{messages.toExponential(2)}</span> messages and n={bits} bits:
               </p>
 
               <AnimatePresence mode="wait">
@@ -589,7 +589,7 @@ export default function SecurityAnalysisPage() {
                         />
                       </svg>
                     </motion.span>
-                    <span>Вычисления...</span>
+                    <span>Computing...</span>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -626,12 +626,12 @@ export default function SecurityAnalysisPage() {
             </motion.div>
           </AnimatedCard>
 
-          {/* Updated: Card - Порог birthday bound */}
+          {/* Updated: Card - Birthday Bound Threshold */}
           <AnimatedCard className="relative overflow-hidden rounded-2xl border border-sky-100 bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-50 p-6 shadow-sm">
             <div className="pointer-events-none absolute -left-8 bottom-0 h-24 w-24 rounded-full bg-gradient-to-tr from-emerald-200/50 to-transparent blur-2xl" />
-            <h3 className="relative text-sm font-semibold text-zinc-900">Порог birthday bound</h3>
+            <h3 className="relative text-sm font-semibold text-zinc-900">Birthday Bound Threshold</h3>
             <p className="mt-2 text-sm text-zinc-700">
-              Около <span className="font-mono">2^(n/2)</span> сообщений:
+              Approximately <span className="font-mono">2^(n/2)</span> messages:
             </p>
             <motion.p
               key={bits}
@@ -643,7 +643,7 @@ export default function SecurityAnalysisPage() {
               {birthdayThreshold.toExponential(3)}
             </motion.p>
             <p className="mt-2 text-xs text-zinc-500">
-              Именно поэтому “половина битов” становится практической границей для оценки коллизий.
+              This is why “half the bits” becomes the practical limit for collision estimation.
             </p>
           </AnimatedCard>
         </section>
@@ -677,10 +677,10 @@ export default function SecurityAnalysisPage() {
               viewport={{ once: true }}
               transition={{ duration: reduceMotion ? 0 : 0.66, delay: reduceMotion ? 0 : 0.15 }}
             >
-{`// Уязвимый MAC-подобный подход:
+{`// Vulnerable MAC-like approach:
 tag = SHA256(secret || message)
 
-// Злоумышленник может построить:
+// Attacker can construct:
 message' = message || gluePadding || extra
 tag' = valid_without_secret`}
             </motion.pre>
@@ -696,7 +696,7 @@ tag' = valid_without_secret`}
               animate={reduceMotion ? undefined : { backgroundPosition: ["200% 0", "-200% 0"] }}
               transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 2.3, ease: "linear" }}
             />
-            <h3 className="relative text-sm font-semibold text-emerald-900">Безопасный подход</h3>
+            <h3 className="relative text-sm font-semibold text-emerald-900">Secure Approach</h3>
             <motion.p
               className="mt-2 text-sm text-emerald-900"
               initial={reduceMotion ? undefined : { opacity: 0, y: 16 }}
@@ -713,17 +713,17 @@ tag' = valid_without_secret`}
               viewport={{ once: true }}
               transition={{ duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : 0.15 }}
             >
-{`// Рекомендуется:
+{`// Recommended:
 tag = HMAC_SHA256(secret, message)
 
-// Альтернатива в новых системах:
+// Alternative in new systems:
 tag = KMAC/SHA3-based MAC`}
             </motion.pre>
           </AnimatedCard>
         </section>
 
         <AnimatedSection delay={0.06} className="rounded-xl border border-zinc-200 bg-white/95 p-4 shadow-md shadow-zinc-200/50 backdrop-blur-sm">
-          <h3 className="text-sm font-semibold text-zinc-900">Практические рекомендации</h3>
+          <h3 className="text-sm font-semibold text-zinc-900">Practical Recommendations</h3>
           <motion.ul
             className="mt-3 flex flex-col gap-2 text-sm text-zinc-700"
             initial="hidden"

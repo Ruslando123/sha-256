@@ -35,32 +35,32 @@ const STEP_META: Record<StepId, StepMeta> = {
   s1: {
     label: "Σ₁(e)",
     formula: "Σ₁(e) = ROTR⁶(e) ⊕ ROTR¹¹(e) ⊕ ROTR²⁵(e)",
-    explain: "Берём регистр e и поворачиваем вправо на 6, 11 и 25 бит, потом XOR.",
+    explain: "Take register e and rotate right by 6, 11, and 25 bits, then XOR.",
   },
   ch: {
     label: "Ch(e, f, g)",
     formula: "Ch(e,f,g) = (e ∧ f) ⊕ (¬e ∧ g)",
-    explain: "Если бит e = 1, берём бит f. Если e = 0, берём бит g.",
+    explain: "If bit e = 1, take bit f. If e = 0, take bit g.",
   },
   t1: {
     label: "T₁",
     formula: "T₁ = h + Σ₁ + Ch + K[0] + W[0]  (mod 2³²)",
-    explain: "Складываем 5 чисел: h, Σ₁, Ch, константу K и слово W.",
+    explain: "Add 5 numbers: h, Σ₁, Ch, constant K, and word W.",
   },
   s0: {
     label: "Σ₀(a)",
     formula: "Σ₀(a) = ROTR²(a) ⊕ ROTR¹³(a) ⊕ ROTR²²(a)",
-    explain: "То же самое, что Σ₁, но для регистра a с другими сдвигами.",
+    explain: "Same as Σ₁, but for register a with different shift amounts.",
   },
   maj: {
     label: "Maj(a, b, c)",
     formula: "Maj(a,b,c) = (a ∧ b) ⊕ (a ∧ c) ⊕ (b ∧ c)",
-    explain: "Бит результата = тот бит, который встречается чаще (голосование 2 из 3).",
+    explain: "The result bit = the bit that appears more often (majority vote, 2 out of 3).",
   },
   t2: {
     label: "T₂",
     formula: "T₂ = Σ₀ + Maj  (mod 2³²)",
-    explain: "Складываем два промежуточных результата.",
+    explain: "Add two intermediate results.",
   },
 };
 
@@ -116,7 +116,7 @@ export function CompressionLesson(props: Props) {
       setHint("");
     } else {
       setStatus("fail");
-      setHint("Неверно. Перепроверь вычисления с калькулятором. Убедись, что все операции mod 2³².");
+      setHint("Incorrect. Double-check your calculations with the calculator. Make sure all operations are mod 2³².");
     }
   };
 
@@ -134,12 +134,12 @@ export function CompressionLesson(props: Props) {
     <LessonShell
       index={props.index}
       total={props.total}
-      title="Один раунд компрессии"
-      simpleWords="В каждом из 64 раундов 8 регистров (a..h) обновляются по строгой формуле. Здесь ты сам вычислишь все промежуточные значения раунда №1."
-      whyMatters="Компрессия делает SHA-256 необратимым: каждый раунд увеличивает запутанность данных."
-      taskTitle={finished ? "Раунд вычислен!" : `Шаг ${stepIdx + 1}/6: Вычисли ${currentMeta?.label}`}
+      title="One compression round"
+      simpleWords="In each of the 64 rounds, 8 registers (a..h) are updated according to a strict formula. Here you will compute all intermediate values of round #1 yourself."
+      whyMatters="Compression makes SHA-256 irreversible: each round increases the entanglement of data."
+      taskTitle={finished ? "Round computed!" : `Step ${stepIdx + 1}/6: Compute ${currentMeta?.label}`}
       status={finished ? "ok" : status}
-      successText="Раунд завершён! Ты сам вычислил каждый шаг. Так будет ещё 63 раза в первом блоке."
+      successText="Round complete! You computed every step yourself. This happens 63 more times in the first block."
       hintText={hint}
       completed={props.completed}
       canGoNext={props.completed}
@@ -152,7 +152,7 @@ export function CompressionLesson(props: Props) {
       <div className="flex flex-col gap-5">
         {/* Registers */}
         <section>
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Регистры (раунд 0)</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500">Registers (round 0)</p>
           <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
             {REGISTER_NAMES.map((name) => {
               const isActive = currentStep === "s1" && name === "e"
@@ -267,7 +267,7 @@ export function CompressionLesson(props: Props) {
                         disabled={!answer.trim()}
                         className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-cyan-700 disabled:bg-zinc-300"
                       >
-                        Проверить
+                        Check
                       </button>
                     </div>
                   )}
@@ -278,7 +278,7 @@ export function CompressionLesson(props: Props) {
                     </p>
                   )}
 
-                  {isLocked && <p className="text-xs text-zinc-400">Реши предыдущие шаги</p>}
+                  {isLocked && <p className="text-xs text-zinc-400">Solve previous steps first</p>}
                 </div>
               </div>
             </div>
@@ -288,11 +288,11 @@ export function CompressionLesson(props: Props) {
         {/* Shift result */}
         {finished && (
           <div className="rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4">
-            <p className="text-sm font-semibold text-emerald-800">Конвейер регистров после раунда:</p>
+            <p className="text-sm font-semibold text-emerald-800">Register pipeline after the round:</p>
             <p className="mt-1 text-xs text-emerald-700">
               a' = T₁ + T₂ = <span className="font-mono">0x{toHex32(round.after[0])}</span>,{" "}
               e' = d + T₁ = <span className="font-mono">0x{toHex32(round.after[4])}</span>.
-              Остальные сдвигаются: b←a, c←b, d←c, f←e, g←f, h←g.
+              The rest shift: b←a, c←b, d←c, f←e, g←f, h←g.
             </p>
             <div className="mt-2 grid grid-cols-4 gap-1 font-mono text-[11px] sm:grid-cols-8">
               {round.after.map((v, i) => (
@@ -308,13 +308,13 @@ export function CompressionLesson(props: Props) {
 
         {/* Reference */}
         <details className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-700">
-          <summary className="cursor-pointer font-medium text-zinc-800">Мини-объяснение Ch на 4-х битах</summary>
+          <summary className="cursor-pointer font-medium text-zinc-800">Mini-explanation of Ch on 4 bits</summary>
           <div className="mt-2 grid grid-cols-3 gap-x-4 gap-y-1 font-mono text-[11px]">
             <span>e = 1010</span>
             <span>f = 1111</span>
             <span>g = 0000</span>
-            <span className="col-span-3">Где e=1 → берём f. Где e=0 → берём g.</span>
-            <span className="col-span-3">Ch = 1010 (совпало с f, потому что g нули)</span>
+            <span className="col-span-3">Where e=1 → take f. Where e=0 → take g.</span>
+            <span className="col-span-3">Ch = 1010 (matches f, because g is all zeros)</span>
           </div>
         </details>
       </div>

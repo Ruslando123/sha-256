@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SHA-256 in Blockchain · Proof of Work</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/><style>
+:root {
+  --bg: #f4f8ff;
+  --bg2: #ffffff;
+  --bg3: #e8f0fe;
+  --border: #c5d8f5;
+  --border2: #b0c8f0;
+  --blue: #1a6ef5;
+  --blue-mid: #1259d0;
+  --blue-dim: #1a6ef515;
+  --blue-light: #e8f0fe;
+  --teal: #0ea5c9;
+  --teal-dim: #0ea5c915;
+  --amber: #e07800;
+  --amber-dim: #e0780015;
+  --red: #e02040;
+  --red-dim: #e0204015;
+  --green: #0b9f6a;
+  --green-dim: #0b9f6a15;
+  --text: #1a2540;
+  --text-dim: #4a6080;
+  --text-muted: #8aa0bc;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Syne', sans-serif;
+  --shadow: 0 2px 16px rgba(26,110,245,.08);
+  --shadow-lg: 0 4px 32px rgba(26,110,245,.13);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity:0.25;
+  pointer-events:none;
+  z-index:0;
+}
+
+.wrap { max-width:860px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+/* NAV */
+nav {
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: none; /* Changed from 1px solid var(--border) */
+}
+
+/* HERO */
+.hero { padding:60px 0 40px; }
+.hero-tag {
+  font-family:var(--mono);
+  font-size:11px;
+  color:var(--amber);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1 {
+  font-size:clamp(32px,5vw,52px);
+  font-weight:800;
+  line-height:1.1;
+  color:var(--text);
+  margin-bottom:20px;
+}
+.hero h1 span { color:var(--blue); }
+.hero-desc {
+  font-size:17px;
+  line-height:1.7;
+  color:var(--text-dim);
+  max-width:600px;
+  margin-bottom:32px;
+}
+
+/* WHY BOX */
+.why-box {
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-left:3px solid var(--amber);
+  border-radius:8px;
+  padding:24px 28px;
+  margin-bottom:48px;
+  box-shadow:var(--shadow);
+}
+.why-box h3 {
+  font-size:14px;
+  font-family:var(--mono);
+  color:var(--amber);
+  margin-bottom:16px;
+  letter-spacing:1px;
+}
+.why-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.why-item {
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+.why-icon {
+  width:28px;
+  height:28px;
+  border-radius:6px;
+  background:var(--amber-dim);
+  border:1px solid var(--amber);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  flex-shrink:0;
+}
+.why-text { font-size:14px; line-height:1.5; color:var(--text-dim); }
+.why-text strong { color:var(--text); display:block; margin-bottom:2px; font-size:13px; }
+
+/* SECTION */
+.section { margin-bottom:48px; }
+.section-head {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:24px;
+}
+.step-num {
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:2px solid var(--blue);
+  color:var(--blue);
+  font-family:var(--mono);
+  font-size:14px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.step-num.done { background:var(--blue); color:#fff; }
+.step-num.locked { border-color:var(--border2); color:var(--text-muted); }
+.section-head h2 { font-size:20px; font-weight:700; color:var(--text); }
+.section-head p { font-size:13px; color:var(--text-dim); margin-top:2px; }
+
+/* CARDS */
+.card {
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+.card + .card { margin-top:16px; }
+
+/* INPUTS */
+.field-label {
+  font-size:12px;
+  font-family:var(--mono);
+  color:var(--text-dim);
+  letter-spacing:1px;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.field-label .tip {
+  width:16px; height:16px;
+  border-radius:50%;
+  background:var(--border2);
+  color:var(--text-dim);
+  font-size:10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:help;
+  position:relative;
+}
+.field-label .tip:hover::after {
+  content: attr(data-tip);
+  position:absolute;
+  left:22px;
+  top:50%;
+  transform:translateY(-50%);
+  background:#fff;
+  border:1px solid var(--border2);
+  color:var(--text);
+  font-size:12px;
+  padding:8px 12px;
+  border-radius:6px;
+  white-space:nowrap;
+  z-index:10;
+  width:240px;
+  white-space:normal;
+  font-family:var(--sans);
+  letter-spacing:0;
+  line-height:1.5;
+  box-shadow:var(--shadow-lg);
+}
+input[type=text], input[type=number] {
+  width:100%;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:6px;
+  padding:12px 14px;
+  font-family:var(--mono);
+  font-size:14px;
+  color:var(--text);
+  outline:none;
+  transition:border-color .2s;
+}
+input[type=text]:focus, input[type=number]:focus { border-color:var(--blue); }
+
+/* HASH DISPLAY */
+.hash-display {
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px;
+  margin-top:16px;
+}
+.hash-label {
+  font-size:11px;
+  font-family:var(--mono);
+  color:var(--text-muted);
+  margin-bottom:8px;
+  letter-spacing:1px;
+}
+.hash-chars {
+  font-family:var(--mono);
+  font-size:13px;
+  word-break:break-all;
+  line-height:1.8;
+  letter-spacing:1px;
+  color:var(--text-dim);
+}
+.hash-char { display:inline-block; transition:color .15s, background .15s; border-radius:2px; padding:0 1px; }
+.hash-char.zero { color:var(--blue); font-weight:700; }
+.hash-char.changed { animation:flash .4s ease; }
+@keyframes flash {
+  0%   { background:rgba(26,110,245,.25); }
+  100% { background:transparent; }
+}
+
+/* DIFFICULTY BADGE */
+.diff-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:4px 12px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--text-dim);
+  margin-top:8px;
+}
+.diff-badge .dot { width:8px; height:8px; border-radius:50%; }
+.diff-badge.pass .dot { background:var(--blue); }
+.diff-badge.fail .dot { background:var(--red); }
+.diff-badge.pass { border-color:var(--blue); color:var(--blue); }
+.diff-badge.fail { border-color:var(--red); color:var(--red); }
+
+/* BUTTONS */
+.btn {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:11px 20px;
+  border-radius:6px;
+  font-family:var(--mono);
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  border:none;
+  transition:all .2s;
+  letter-spacing:.5px;
+}
+.btn-primary {
+  background:var(--blue);
+  color:#fff;
+}
+.btn-primary:hover { background:var(--blue-mid); transform:translateY(-1px); box-shadow:0 4px 16px rgba(26,110,245,.3); }
+.btn-secondary {
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--border2);
+}
+.btn-secondary:hover { border-color:var(--blue); color:var(--blue); }
+.btn-danger {
+  background:transparent;
+  color:var(--red);
+  border:1px solid var(--red);
+}
+.btn-danger:hover { background:var(--red-dim); }
+.btn:disabled { opacity:.4; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
+.btn-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+
+/* METRICS */
+.metrics {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:16px;
+}
+.metric {
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px;
+  position:relative;
+}
+.metric-label {
+  font-size:11px;
+  font-family:var(--mono);
+  color:var(--text-muted);
+  letter-spacing:1px;
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.metric-val {
+  font-size:22px;
+  font-family:var(--mono);
+  font-weight:700;
+  color:var(--blue);
+}
+.metric-sub { font-size:11px; color:var(--text-muted); margin-top:4px; }
+.metric .tip {
+  position:absolute;
+  top:12px; right:12px;
+  width:18px; height:18px;
+  border-radius:50%;
+  background:var(--border);
+  color:var(--text-dim);
+  font-size:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:help;
+  font-family:var(--mono);
+}
+.metric .tip:hover::after {
+  content: attr(data-tip);
+  position:absolute;
+  right:24px; top:0;
+  background:#fff;
+  border:1px solid var(--border2);
+  color:var(--text);
+  font-size:12px;
+  padding:10px 14px;
+  border-radius:6px;
+  width:220px;
+  z-index:10;
+  line-height:1.5;
+  font-family:var(--sans);
+  box-shadow:var(--shadow-lg);
+}
+
+/* DIFFICULTY SLIDER */
+.diff-section { margin-top:16px; }
+.diff-row {
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin-bottom:16px;
+}
+.diff-value {
+  font-family:var(--mono);
+  font-size:28px;
+  font-weight:700;
+  color:var(--blue);
+  min-width:32px;
+}
+input[type=range] {
+  flex:1;
+  -webkit-appearance:none;
+  height:4px;
+  border-radius:2px;
+  background:var(--border2);
+  outline:none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  width:20px; height:20px;
+  border-radius:50%;
+  background:var(--blue);
+  cursor:pointer;
+  border:3px solid #fff;
+  box-shadow:0 0 0 2px var(--blue);
+}
+.diff-bars {
+  display:flex;
+  gap:4px;
+  align-items:flex-end;
+  height:80px;
+}
+.diff-bar {
+  flex:1;
+  border-radius:3px 3px 0 0;
+  background:var(--border2);
+  transition:background .3s, height .3s;
+  position:relative;
+  cursor:pointer;
+}
+.diff-bar.active { background:var(--blue); }
+.diff-bar.active::after {
+  content: attr(data-label);
+  position:absolute;
+  bottom:-20px;
+  left:50%; transform:translateX(-50%);
+  font-size:10px;
+  font-family:var(--mono);
+  color:var(--blue);
+  white-space:nowrap;
+}
+.diff-tries {
+  margin-top:28px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:16px;
+}
+.diff-tries-label {
+  font-size:12px;
+  font-family:var(--mono);
+  color:var(--text-dim);
+  margin-bottom:8px;
+}
+.diff-tries-val {
+  font-size:24px;
+  font-family:var(--mono);
+  font-weight:700;
+  color:var(--amber);
+}
+.diff-tries-sub { font-size:12px; color:var(--text-muted); margin-top:4px; line-height:1.5; }
+
+/* PROGRESS BAR */
+.progress-bar {
+  display:flex;
+  gap:0;
+  margin-bottom:40px;
+  overflow:hidden;
+  border-radius:8px;
+  border:1px solid var(--border2);
+  box-shadow:var(--shadow);
+}
+.progress-step {
+  flex:1;
+  padding:12px 8px;
+  text-align:center;
+  font-size:11px;
+  font-family:var(--mono);
+  color:var(--text-muted);
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  transition:all .3s;
+  cursor:pointer;
+}
+.progress-step:last-child { border-right:none; }
+.progress-step.active { background:var(--blue-light); color:var(--blue); }
+.progress-step.done { background:var(--bg3); color:var(--text-dim); }
+.progress-step .ps-num { font-size:16px; font-weight:700; display:block; margin-bottom:2px; }
+
+/* MANUAL MINING */
+.nonce-row {
+  display:flex;
+  gap:10px;
+  align-items:flex-end;
+  margin-top:16px;
+}
+.nonce-row input { max-width:160px; }
+.nonce-feedback {
+  margin-top:12px;
+  padding:12px 16px;
+  border-radius:6px;
+  font-size:13px;
+  font-family:var(--mono);
+  display:none;
+}
+.nonce-feedback.show { display:block; }
+.nonce-feedback.pass { background:var(--blue-dim); border:1px solid var(--blue); color:var(--blue); }
+.nonce-feedback.fail { background:var(--red-dim); border:1px solid var(--red); color:var(--red); }
+.nonce-feedback.close { background:var(--amber-dim); border:1px solid var(--amber); color:var(--amber); }
+
+/* REAL WORLD */
+.realworld {
+  background:linear-gradient(135deg, #e8f0fe 0%, #ffffff 100%);
+  border:1px solid var(--blue);
+  border-radius:10px;
+  padding:28px;
+  margin-bottom:48px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.realworld::before {
+  content:'₿';
+  position:absolute;
+  right:24px; top:16px;
+  font-size:80px;
+  color:rgba(26,110,245,.1);
+  line-height:1;
+}
+.realworld h3 {
+  font-size:13px;
+  font-family:var(--mono);
+  color:var(--blue);
+  letter-spacing:2px;
+  margin-bottom:16px;
+}
+.realworld p { font-size:15px; line-height:1.7; color:var(--text); margin-bottom:12px; }
+.realworld .stat-row {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:16px;
+}
+.realworld .stat {
+  background:var(--blue-dim);
+  border:1px solid var(--blue);
+  border-radius:6px;
+  padding:12px;
+  text-align:center;
+}
+.realworld .stat-val {
+  font-family:var(--mono);
+  font-size:18px;
+  font-weight:700;
+  color:var(--blue);
+  display:block;
+}
+.realworld .stat-lbl { font-size:11px; color:var(--text-dim); margin-top:4px; display:block; }
+
+
+.score-box {
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:28px;
+  text-align:center;
+  display:none;
+  box-shadow:var(--shadow);
+}
+.score-box.show { display:block; }
+.score-box .score-num {
+  font-family:var(--mono);
+  font-size:56px;
+  font-weight:700;
+  color:var(--blue);
+  line-height:1;
+  margin-bottom:8px;
+}
+.score-box p { color:var(--text-dim); font-size:15px; }
+
+/* MINING ANIMATION */
+.mining-status {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:16px;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  margin-top:16px;
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--text-dim);
+}
+.pulse {
+  width:10px; height:10px;
+  border-radius:50%;
+  background:var(--blue);
+  animation:pulse 1s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:.3; transform:scale(.8); }
+}
+.mining-status.idle .pulse { background:var(--text-muted); animation:none; }
+.mining-status.found .pulse { background:var(--blue); animation:none; }
+
+/* responsive */
+@media(max-width:600px) {
+  .why-grid { grid-template-columns:1fr; }
+  .metrics { grid-template-columns:1fr; }
+  .realworld .stat-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Module 3 · Blockchain</div>
+    <h1>SHA-256 in<br/><span>Blockchain</span></h1>
+    <p class="hero-desc">
+      Understand how miners compete to find a valid block hash — step by step, 
+      from concept to hands-on mining challenge. No prior knowledge required.
+    </p>
+  </div>
+
+  <!-- WHY BOX -->
+  <div class="why-box">
+    <h3>// WHY DOES THIS MATTER?</h3>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-icon">🔍</div>
+        <div class="why-text">
+          <strong>What is a nonce?</strong>
+          A number miners change to get a different hash output. It has no other meaning — it's just a guess counter.
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">🎯</div>
+        <div class="why-text">
+          <strong>Why leading zeros?</strong>
+          Bitcoin requires hashes to start with many zeros. Only ~1 in 16 hashes starts with one zero — so it takes real work.
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">⚡</div>
+        <div class="why-text">
+          <strong>What is "difficulty"?</strong>
+          The number of leading zeros required. Each extra zero makes mining ~16× harder on average.
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">🏦</div>
+        <div class="why-text">
+          <strong>Why can't miners cheat?</strong>
+          SHA-256 is a one-way function. There's no shortcut — you must try random nonces until one works.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR (5 steps now) -->
+  <div class="progress-bar">
+    <div class="progress-step active" id="ps1"><span class="ps-num">1</span>Setup</div>
+    <div class="progress-step" id="ps2"><span class="ps-num">2</span>Explore</div>
+    <div class="progress-step" id="ps3"><span class="ps-num">3</span>Mine</div>
+    <div class="progress-step" id="ps4"><span class="ps-num">4</span>Difficulty</div>
+
+  </div>
+
+  <!-- STEP 1: SETUP -->
+  <div class="section" id="step1">
+    <div class="section-head">
+      <div class="step-num" id="sn1">1</div>
+      <div>
+        <h2>Set Up Your Block</h2>
+        <p>Enter the transaction data that will go into the block.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="field-label">
+        TRANSACTION DATA
+        <span class="tip" data-tip="This simulates the data inside a Bitcoin block — like 'Alice sends Bob 1 BTC'. In real Bitcoin this is much more complex.">?</span>
+      </div>
+      <input type="text" id="txData" value="Alice → Bob: 1 BTC" placeholder="Enter transaction data..."/>
+      <div style="margin-top:16px;">
+        <div class="field-label">
+          DIFFICULTY (leading zeros required)
+          <span class="tip" data-tip="How many zeros must the hash start with. d=1 is easy. d=4 means ~65,000 tries on average.">?</span>
+        </div>
+        <div class="diff-row" style="margin-bottom:0;">
+          <div class="diff-value" id="setupDiffVal">3</div>
+          <input type="range" id="setupDiff" min="1" max="6" value="3"/>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--text-dim);">≈ <span id="setupExpected">4,096</span> tries</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="initBlock()">⚙ Initialize Block →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: EXPLORE -->
+  <div class="section" id="step2" style="opacity:.4;pointer-events:none;">
+    <div class="section-head">
+      <div class="step-num locked" id="sn2">2</div>
+      <div>
+        <h2>Explore Hash Outputs</h2>
+        <p>See how different nonces produce completely different hashes.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="field-label">YOUR BLOCK DATA</div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;font-family:var(--mono);font-size:13px;color:var(--text-dim);" id="blockPreview">—</div>
+
+      <div style="margin-top:16px;">
+        <div class="field-label">NONCE — <span style="color:var(--blue);font-size:11px;">type any number directly or use buttons</span> <span class="tip" data-tip="Type any number directly into the box. Notice how even +1 creates a completely different 256-bit hash — that's the avalanche effect.">?</span></div>
+        <div class="nonce-row">
+          <input type="number" id="exploreNonce" value="0" min="0" style="max-width:200px;font-size:20px;font-weight:700;color:var(--blue);border-color:var(--blue);padding:12px 16px;" oninput="updateExploreHash()"/>
+          <button class="btn btn-secondary" onclick="exploreNonce(-1)">◀ −1</button>
+          <button class="btn btn-secondary" onclick="exploreNonce(1)">+1 ▶</button>
+          <button class="btn btn-secondary" onclick="exploreNonce(10)">+10 ▶▶</button>
+        </div>
+      </div>
+
+      <div class="hash-display" id="exploreHashBox">
+        <div class="hash-label">SHA-256( data + nonce )</div>
+        <div class="hash-chars" id="exploreHashChars">—</div>
+        <div style="margin-top:10px;" id="exploreBadge"></div>
+      </div>
+
+      <div style="margin-top:16px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;">
+        <div style="font-size:12px;font-family:var(--mono);color:var(--text-muted);margin-bottom:6px;">INPUT STRING BEING HASHED</div>
+        <div style="font-family:var(--mono);font-size:13px;color:var(--text-dim);" id="exploreInput">—</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="unlockStep3()">Proceed to Mining Challenge →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: MANUAL MINING -->
+  <div class="section" id="step3" style="opacity:.4;pointer-events:none;">
+    <div class="section-head">
+      <div class="step-num locked" id="sn3">3</div>
+      <div>
+        <h2>Mining Challenge</h2>
+        <p>Try to find a valid nonce yourself — then let the computer do it.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px;color:var(--text-dim);margin-bottom:16px;line-height:1.6;">
+        💻 <strong style="color:var(--text);">Let the computer search</strong> — watch how fast it tries nonces to find a valid hash.
+      </div>
+      <div class="mining-status idle" id="miningStatus">
+        <div class="pulse"></div>
+        <span id="miningStatusText">Ready to mine</span>
+      </div>
+
+      <div class="hash-display" style="margin-top:12px;">
+        <div class="hash-label">CURRENT HASH BEING TESTED</div>
+        <div class="hash-chars" id="autoHashChars">—</div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">ATTEMPTS <div class="tip" data-tip="Total number of nonces tried so far. This is the 'work' in Proof of Work.">?</div></div>
+          <div class="metric-val" id="mAttempts">0</div>
+          <div class="metric-sub">nonces tested</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">ELAPSED <div class="tip" data-tip="Time since mining started. In real Bitcoin, this is ~10 minutes per block on the whole network.">?</div></div>
+          <div class="metric-val" id="mElapsed">0ms</div>
+          <div class="metric-sub">wall clock time</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">HASH RATE <div class="tip" data-tip="How many hashes per second your browser can compute. Real Bitcoin ASICs do trillions per second.">?</div></div>
+          <div class="metric-val" id="mHashRate">0</div>
+          <div class="metric-sub">hashes / second</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">WINNING NONCE <div class="tip" data-tip="The nonce value that produced a hash meeting the difficulty requirement.">?</div></div>
+          <div class="metric-val" id="mNonce">—</div>
+          <div class="metric-sub">found when done</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnMine" onclick="startMining()">▶ Start Mining</button>
+        <button class="btn btn-danger" id="btnStop" onclick="stopMining()" disabled>■ Stop</button>
+        <button class="btn btn-secondary" id="btnReset" onclick="resetMining()">↺ Reset</button>
+      </div>
+
+      <div id="winBox" style="display:none;margin-top:16px;padding:20px;background:var(--blue-dim);border:1px solid var(--blue);border-radius:8px;">
+        <div style="font-family:var(--mono);color:var(--blue);font-size:13px;margin-bottom:8px;">✓ BLOCK FOUND!</div>
+        <div style="font-size:14px;color:var(--text);">Winning nonce: <strong style="font-family:var(--mono);color:var(--blue);" id="winNonce">—</strong></div>
+        <div style="font-size:14px;color:var(--text);margin-top:4px;">Hash: <span style="font-family:var(--mono);font-size:12px;color:var(--blue);" id="winHash">—</span></div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-primary" onclick="unlockStep4()">Continue to Difficulty →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: DIFFICULTY (was step 5) -->
+  <div class="section" id="step4" style="opacity:.4;pointer-events:none;">
+    <div class="section-head">
+      <div class="step-num locked" id="sn4">4</div>
+      <div>
+        <h2>How Difficulty Scales</h2>
+        <p>Each extra leading zero makes finding a valid hash ~16× harder.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:20px;">
+        Drag the slider to change difficulty. Watch how the expected number of tries explodes exponentially.
+      </div>
+      <div class="diff-row">
+        <div class="diff-value" id="diffVal">4</div>
+        <input type="range" id="diffSlider" min="1" max="10" value="4" oninput="updateDiff()"/>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text-dim);">leading zeros</span>
+      </div>
+      <div class="diff-bars" id="diffBars"></div>
+      <div class="diff-tries">
+        <div class="diff-tries-label">EXPECTED ATTEMPTS FOR d = <span id="diffTriesD">4</span></div>
+        <div class="diff-tries-val" id="diffTriesVal">65,536</div>
+        <div class="diff-tries-sub" id="diffTriesSub">At 10,000 h/s that's ~6.5 seconds. Real Bitcoin miners do 100 TH/s.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REAL WORLD -->
+  <div class="realworld">
+    <h3>// REAL WORLD · BITCOIN 2024</h3>
+    <p>
+      Bitcoin currently requires hashes to begin with approximately <strong>19–20 leading zeros</strong> in hexadecimal. 
+      That means the valid hash space is roughly 1 in 10²³ — smaller than the number of atoms in a gram of carbon.
+    </p>
+    <p style="color:var(--text-dim);font-size:14px;">
+      This is why the entire Bitcoin network, running trillions of hashes per second, still takes ~10 minutes to find one valid block.
+    </p>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="stat-val">~19</span>
+        <span class="stat-lbl">Leading zeros required</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">~700 EH/s</span>
+        <span class="stat-lbl">Global hash rate</span>
+      </div>
+      <div class="stat">
+        <span class="stat-val">~10 min</span>
+        <span class="stat-lbl">Average block time</span>
+      </div>
+    </div>
+  </div>
+
+  
+
+<script>
+// SHA-256
+async function sha256hex(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// State
+let blockData = '';
+let difficulty = 3;
+let miningRunning = false;
+let miningStart = 0;
+let miningAttempts = 0;
+let miningBatch = 0;
+let prevHash = '';
+let quizAnswers = {};
+let quizScore = 0;
+
+const diffLabels = d => {
+  const tries = Math.pow(16, d);
+  if (tries < 1000) return tries.toLocaleString();
+  if (tries < 1e6) return (tries/1000).toFixed(0)+'K';
+  if (tries < 1e9) return (tries/1e6).toFixed(1)+'M';
+  if (tries < 1e12) return (tries/1e9).toFixed(1)+'B';
+  return tries.toExponential(2);
+};
+
+document.getElementById('setupDiff').addEventListener('input', function() {
+  difficulty = parseInt(this.value);
+  document.getElementById('setupDiffVal').textContent = difficulty;
+  document.getElementById('setupExpected').textContent = diffLabels(difficulty);
+});
+
+function initBlock() {
+  blockData = document.getElementById('txData').value.trim() || 'Alice → Bob: 1 BTC';
+  difficulty = parseInt(document.getElementById('setupDiff').value);
+  document.getElementById('blockPreview').textContent = blockData;
+  unlockSection('step2','sn2','ps2');
+  updateExploreHash();
+  scrollTo('step2');
+}
+
+async function updateExploreHash() {
+  const nonce = parseInt(document.getElementById('exploreNonce').value) || 0;
+  const input = blockData + ':' + nonce;
+  document.getElementById('exploreInput').textContent = input;
+  const h = await sha256hex(input);
+  renderHashChars('exploreHashChars', h, prevHash);
+  prevHash = h;
+  const prefix = '0'.repeat(difficulty);
+  const passes = h.startsWith(prefix);
+  const badge = document.getElementById('exploreBadge');
+  badge.innerHTML = `<div class="diff-badge ${passes?'pass':'fail'}">
+    <div class="dot"></div>
+    ${passes ? '✓ VALID — starts with '+prefix : '✗ INVALID — does not start with '+prefix}
+  </div>`;
+}
+
+function exploreNonce(delta) {
+  const el = document.getElementById('exploreNonce');
+  el.value = Math.max(0, (parseInt(el.value)||0) + delta);
+  updateExploreHash();
+}
+document.getElementById('exploreNonce').addEventListener('input', updateExploreHash);
+
+function renderHashChars(elId, hash, oldHash) {
+  const el = document.getElementById(elId);
+  const prefix = '0'.repeat(difficulty);
+  el.innerHTML = hash.split('').map((c,i) => {
+    const isZero = i < difficulty && c === '0';
+    const changed = oldHash && c !== oldHash[i] ? 'changed' : '';
+    return `<span class="hash-char ${isZero?'zero':''} ${changed}">${c}</span>`;
+  }).join('');
+}
+
+function unlockStep3() {
+  unlockSection('step3','sn3','ps3');
+  scrollTo('step3');
+}
+
+async function checkManualNonce() {
+  const nonce = parseInt(document.getElementById('manualNonce').value);
+  if (isNaN(nonce)) return;
+  const h = await sha256hex(blockData + ':' + nonce);
+  renderHashChars('manualHashChars', h, '');
+  const prefix = '0'.repeat(difficulty);
+  const fb = document.getElementById('manualFeedback');
+  const zeros = h.match(/^0*/)[0].length;
+  if (h.startsWith(prefix)) {
+    fb.className = 'nonce-feedback show pass';
+    fb.textContent = `✓ Correct! Nonce ${nonce} produces a valid hash. Well done!`;
+  } else if (zeros === difficulty - 1) {
+    fb.className = 'nonce-feedback show close';
+    fb.textContent = `Almost! You got ${zeros} leading zeros but need ${difficulty}. Try nearby values.`;
+  } else {
+    fb.className = 'nonce-feedback show fail';
+    fb.textContent = `✗ Invalid. This hash starts with only ${zeros} leading zero${zeros!==1?'s':''}. Keep guessing!`;
+  }
+}
+
+async function giveHint() {
+  const fb = document.getElementById('manualFeedback');
+  fb.className = 'nonce-feedback show close';
+  fb.textContent = '🔍 Searching for a hint...';
+  for (let n = 0; n < 50000; n++) {
+    const h = await sha256hex(blockData + ':' + n);
+    if (h.startsWith('0'.repeat(Math.max(1, difficulty - 1)))) {
+      fb.textContent = `💡 Hint: Try nonces around ${Math.max(0,n-5)} to ${n+5}. One of them might work!`;
+      return;
+    }
+  }
+  fb.textContent = '💡 Try searching from nonce 0 upward systematically.';
+}
+
+async function startMining() {
+  document.getElementById('btnMine').disabled = true;
+  document.getElementById('btnStop').disabled = false;
+  document.getElementById('winBox').style.display = 'none';
+  miningRunning = true;
+  miningStart = Date.now();
+  miningAttempts = 0;
+  miningBatch = 0;
+  setMiningStatus('running','⛏ Mining... searching for valid hash');
+  runMiningBatch();
+}
+
+async function runMiningBatch() {
+  if (!miningRunning) return;
+  const prefix = '0'.repeat(difficulty);
+  const BATCH = 200;
+  for (let i = 0; i < BATCH; i++) {
+    const n = miningBatch * BATCH + i;
+    const h = await sha256hex(blockData + ':' + n);
+    miningAttempts++;
+    if (miningAttempts % 20 === 0) {
+      renderHashChars('autoHashChars', h, '');
+      updateMetrics(n, h, false);
+    }
+    if (h.startsWith(prefix)) {
+      miningRunning = false;
+      renderHashChars('autoHashChars', h, '');
+      updateMetrics(n, h, true);
+      setMiningStatus('found', `✓ Found! Nonce = ${n}`);
+      document.getElementById('winNonce').textContent = n;
+      document.getElementById('winHash').textContent = h;
+      document.getElementById('winBox').style.display = 'block';
+      document.getElementById('btnMine').disabled = false;
+      document.getElementById('btnStop').disabled = true;
+      document.getElementById('mNonce').textContent = n;
+      return;
+    }
+  }
+  miningBatch++;
+  updateMetrics(null, null, false);
+  requestAnimationFrame(runMiningBatch);
+}
+
+function updateMetrics(nonce, hash, done) {
+  const elapsed = Date.now() - miningStart;
+  const rate = elapsed > 0 ? Math.round(miningAttempts / (elapsed / 1000)) : 0;
+  document.getElementById('mAttempts').textContent = miningAttempts.toLocaleString();
+  document.getElementById('mElapsed').textContent = elapsed < 1000 ? elapsed+'ms' : (elapsed/1000).toFixed(1)+'s';
+  document.getElementById('mHashRate').textContent = rate > 1000 ? (rate/1000).toFixed(1)+'K' : rate;
+  if (nonce !== null) document.getElementById('mNonce').textContent = done ? nonce : '—';
+}
+
+function stopMining() {
+  miningRunning = false;
+  setMiningStatus('idle','⏹ Stopped');
+  document.getElementById('btnMine').disabled = false;
+  document.getElementById('btnStop').disabled = true;
+}
+
+function resetMining() {
+  stopMining();
+  miningAttempts = 0;
+  document.getElementById('mAttempts').textContent = '0';
+  document.getElementById('mElapsed').textContent = '0ms';
+  document.getElementById('mHashRate').textContent = '0';
+  document.getElementById('mNonce').textContent = '—';
+  document.getElementById('autoHashChars').textContent = '—';
+  document.getElementById('winBox').style.display = 'none';
+  setMiningStatus('idle','Ready to mine');
+}
+
+function setMiningStatus(state, text) {
+  const el = document.getElementById('miningStatus');
+  el.className = 'mining-status ' + state;
+  document.getElementById('miningStatusText').textContent = text;
+}
+
+// Step 4: Difficulty (renumbered)
+function unlockStep4() {
+  unlockSection('step4','sn4','ps4');
+  buildDiffBars();
+  scrollTo('step4');
+}
+
+function buildDiffBars() {
+  const c = document.getElementById('diffBars');
+  c.innerHTML = '';
+  const maxH = 70;
+  for (let d = 1; d <= 10; d++) {
+    const bar = document.createElement('div');
+    bar.className = 'diff-bar';
+    bar.dataset.label = 'd='+d;
+    const h = Math.max(4, maxH * d / 10);
+    bar.style.height = h + 'px';
+    bar.onclick = () => {
+      document.getElementById('diffSlider').value = d;
+      updateDiff();
+    };
+    c.appendChild(bar);
+  }
+  updateDiff();
+}
+
+function updateDiff() {
+  const d = parseInt(document.getElementById('diffSlider').value);
+  document.getElementById('diffVal').textContent = d;
+  document.getElementById('diffTriesD').textContent = d;
+  const tries = Math.pow(16, d);
+  document.getElementById('diffTriesVal').textContent = tries >= 1e15 ? tries.toExponential(2) :
+    tries >= 1e12 ? (tries/1e12).toFixed(1)+' trillion' :
+    tries >= 1e9 ? (tries/1e9).toFixed(1)+' billion' :
+    tries >= 1e6 ? (tries/1e6).toFixed(1)+' million' :
+    tries.toLocaleString();
+
+  const seconds = tries / 700e18;
+  const timeStr = seconds < 0.001 ? '<1ms' :
+    seconds < 1 ? (seconds*1000).toFixed(0)+'ms' :
+    seconds < 60 ? seconds.toFixed(1)+'s' :
+    seconds < 3600 ? (seconds/60).toFixed(1)+' min' :
+    (seconds/86400).toFixed(0)+' days';
+
+  document.getElementById('diffTriesSub').textContent =
+    `16^${d} = ${tries.toExponential(2)} expected tries. At Bitcoin's ~700 EH/s global rate, that's ~${timeStr}.`;
+
+  document.querySelectorAll('.diff-bar').forEach((b, i) => {
+    b.classList.toggle('active', i+1 === d);
+  });
+}
+
+// Step 5: Quiz (renumbered)
+function unlockStep5() {
+  unlockSection('step5','sn5','ps5');
+  scrollTo('step5');
+}
+
+function answer(qnum, btn, correct) {
+  const opts = btn.parentElement.querySelectorAll('.quiz-opt');
+  opts.forEach(o => { o.disabled = true; });
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    opts.forEach(o => {
+      if (o.onclick.toString().includes('true')) o.classList.add('correct');
+    });
+  }
+  const exp = document.getElementById('qe'+qnum);
+  exp.classList.add('show', correct ? 'pass' : 'fail');
+  if (!quizAnswers[qnum]) {
+    quizAnswers[qnum] = correct;
+    if (correct) quizScore++;
+  }
+  if (Object.keys(quizAnswers).length === 3) {
+    setTimeout(showScore, 600);
+  }
+}
+
+function showScore() {
+  const box = document.getElementById('scoreBox');
+  box.classList.add('show');
+  document.getElementById('scoreNum').textContent = quizScore + '/3';
+  const msgs = [
+    'Keep reviewing the material above and try again!',
+    'Good start! Review the sections that tripped you up.',
+    'Almost perfect! One more review and you\'ll ace it.',
+    '🎉 Perfect score! You understand Proof of Work.'
+  ];
+  document.getElementById('scoreMsg').textContent = msgs[quizScore];
+  markProgressDone();
+}
+
+function resetQuiz() {
+  quizAnswers = {};
+  quizScore = 0;
+  document.getElementById('scoreBox').classList.remove('show');
+  [1,2,3].forEach(n => {
+    const q = document.getElementById('q'+n);
+    q.querySelectorAll('.quiz-opt').forEach(o => {
+      o.disabled = false;
+      o.classList.remove('correct','wrong');
+    });
+    document.getElementById('qe'+n).classList.remove('show','pass','fail');
+  });
+}
+
+function markProgressDone() {
+  ['ps1','ps2','ps3','ps4','ps5'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('active');
+    el.classList.add('done');
+  });
+}
+
+// Unlock helpers
+function unlockSection(sectionId, stepNumId, progressId) {
+  const s = document.getElementById(sectionId);
+  s.style.opacity = '1';
+  s.style.pointerEvents = 'auto';
+  s.style.transition = 'opacity .4s';
+  document.getElementById(stepNumId).classList.remove('locked');
+  const steps = ['ps1','ps2','ps3','ps4','ps5'];
+  const idx = steps.indexOf(progressId);
+  steps.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (i < idx) { el.classList.remove('active'); el.classList.add('done'); }
+    if (id === progressId) { el.classList.add('active'); }
+  });
+}
+
+function scrollTo(id) {
+  setTimeout(() => {
+    document.getElementById(id).scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 100);
+}
+
+document.getElementById('setupDiffVal').textContent = '3';
+document.getElementById('setupExpected').textContent = diffLabels(3);
+</script>
+</body>
+</html>

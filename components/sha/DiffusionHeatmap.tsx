@@ -103,14 +103,14 @@ export function DiffusionHeatmap({ getStep, stepCount, currentRound }: Diffusion
     <div className="rounded-xl border border-zinc-200 bg-white/90 p-3 backdrop-blur-sm">
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-zinc-600">
-          Диффузия битов
+          Bit diffusion
         </h3>
         <div className="flex items-center gap-3 text-[10px] font-mono text-zinc-500">
           {activeRound >= 0 && (
             <>
-              <span>раунд: <span className="font-semibold text-amber-700">{activeRound + 1}</span>/64</span>
-              <span>бит: <span className="font-semibold text-cyan-700">{totalChanged}</span></span>
-              <span>всего: <span className="font-semibold text-violet-700">{cumulativeChanged}</span></span>
+              <span>round: <span className="font-semibold text-amber-700">{activeRound + 1}</span>/64</span>
+              <span>bits: <span className="font-semibold text-cyan-700">{totalChanged}</span></span>
+              <span>total: <span className="font-semibold text-violet-700">{cumulativeChanged}</span></span>
             </>
           )}
         </div>
@@ -191,7 +191,7 @@ export function DiffusionHeatmap({ getStep, stepCount, currentRound }: Diffusion
       {/* Legend */}
       <div className="mt-2 flex items-center justify-between">
         <div className="flex items-center gap-1 text-[9px] text-zinc-500">
-          <span>0 бит</span>
+          <span>0 bits</span>
           <div className="flex h-2 gap-px">
             {[0, 4, 8, 12, 16, 20, 24, 28, 32].map(v => (
               <div
@@ -201,9 +201,9 @@ export function DiffusionHeatmap({ getStep, stepCount, currentRound }: Diffusion
               />
             ))}
           </div>
-          <span>32 бит</span>
+          <span>32 bits</span>
         </div>
-        <span className="text-[9px] text-zinc-400">Хэмминг расстояние между раундами</span>
+        <span className="text-[9px] text-zinc-400">Hamming distance between rounds</span>
       </div>
     </div>
   );

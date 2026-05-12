@@ -123,7 +123,7 @@ export function FinalizeLesson(props: Props) {
     } else {
       setStatus("fail");
       setHint(
-        `Неверно. Сложи H[${currentIdx}] и working[${currentIdx}] и возьми результат mod 2³² (отбрось всё что выше 0xFFFFFFFF). Используй калькулятор!`,
+        `Incorrect. Add H[${currentIdx}] and working[${currentIdx}] and take the result mod 2³² (discard everything above 0xFFFFFFFF). Use the calculator!`,
       );
     }
   }, [answer, currentIdx, initialH, working]);
@@ -145,12 +145,12 @@ export function FinalizeLesson(props: Props) {
     <LessonShell
       index={props.index}
       total={props.total}
-      title="Финализация: H += state"
-      simpleWords="После 64 раундов 8 рабочих регистров прибавляются к 8 начальным значениям H. Эти 8 чисел, склеенные вместе, и есть итоговый хеш."
-      whyMatters="Сложение с начальным H делает функцию устойчивее: даже если атакующий контролировал рабочие регистры, ему нужно угадать исходный H."
-      taskTitle={allDone ? "Digest собран!" : `Вычисли H[${currentIdx}] + working[${currentIdx}] (mod 2³²)`}
+      title="Finalization: H += state"
+      simpleWords="After 64 rounds, the 8 working registers are added to the 8 initial H values. These 8 numbers, concatenated together, form the final hash."
+      whyMatters="Adding the initial H makes the function more robust: even if an attacker controlled the working registers, they would need to guess the original H."
+      taskTitle={allDone ? "Digest assembled!" : `Compute H[${currentIdx}] + working[${currentIdx}] (mod 2³²)`}
       status={allDone ? "ok" : status}
-      successText={`Готово! SHA-256 для "${SAMPLE}" собран по байтам.`}
+      successText={`Done! SHA-256 for "${SAMPLE}" has been assembled byte by byte.`}
       hintText={hint}
       completed={props.completed}
       canGoNext={props.completed}
@@ -162,7 +162,7 @@ export function FinalizeLesson(props: Props) {
     >
       <div className="flex flex-col gap-5">
         <p className="text-xs text-zinc-500">
-          Сообщение: <span className="font-mono">"{SAMPLE}"</span>. Собираем 256-битный digest из 8 сумм по 32 бита.
+          Message: <span className="font-mono">"{SAMPLE}"</span>. Assembling a 256-bit digest from 8 sums of 32 bits each.
         </p>
 
         {/* Current computation */}
@@ -174,7 +174,7 @@ export function FinalizeLesson(props: Props) {
               </span>
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-medium text-zinc-900">
-                  Сложи <strong>H[{currentIdx}]</strong> ({REGISTER_NAMES[currentIdx]}) и <strong>working[{currentIdx}]</strong>
+                  Add <strong>H[{currentIdx}]</strong> ({REGISTER_NAMES[currentIdx]}) and <strong>working[{currentIdx}]</strong>
                 </p>
                 <div className="rounded-lg bg-white p-3 ring-1 ring-zinc-200">
                   <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-1 font-mono text-sm">
@@ -192,7 +192,7 @@ export function FinalizeLesson(props: Props) {
                     </span>
                   </div>
                   <p className="mt-2 text-[11px] text-zinc-400">
-                    Сумма mod 2³² (= если результат {'>'} 0xFFFFFFFF, отбрось старшие биты)
+                    Sum mod 2³² (= if result {'>'} 0xFFFFFFFF, discard the upper bits)
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -210,7 +210,7 @@ export function FinalizeLesson(props: Props) {
                     disabled={!answer.trim()}
                     className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-cyan-700 disabled:bg-zinc-300"
                   >
-                    Проверить
+                    Check
                   </button>
                 </div>
               </div>
@@ -242,7 +242,7 @@ export function FinalizeLesson(props: Props) {
                 <span className="font-mono text-[11px]">{toHex32(value)}</span>
                 <br />
                 {done ? (
-                  <span className="text-[11px] text-emerald-600">✓ вычислено</span>
+                  <span className="text-[11px] text-emerald-600">✓ computed</span>
                 ) : (
                   <span className="text-[11px] text-zinc-400">+ {toHex32(working[i]!)}</span>
                 )}
@@ -254,7 +254,7 @@ export function FinalizeLesson(props: Props) {
         {/* Progress bar */}
         <section>
           <div className="flex items-center justify-between text-xs text-zinc-600">
-            <span>Собрано бит</span>
+            <span>Bits assembled</span>
             <span className="font-mono">{filled * 32} / 256</span>
           </div>
           <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-zinc-100">
@@ -269,7 +269,7 @@ export function FinalizeLesson(props: Props) {
         {/* Digest assembly */}
         <section className="rounded-2xl border border-zinc-200 bg-zinc-900 p-4">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-400">
-            Итоговый digest (собирается по кусочкам)
+            Final digest (assembled piece by piece)
           </p>
           <div className="grid grid-cols-4 gap-1 font-mono sm:grid-cols-8">
             {Array.from({ length: 8 }).map((_, i) => {
@@ -306,7 +306,7 @@ export function FinalizeLesson(props: Props) {
 
           {filled > 0 && (
             <div className="mt-3 flex items-start gap-2 text-[11px]">
-              <span className="text-zinc-500">Эталон:</span>
+              <span className="text-zinc-500">Reference:</span>
               <span className="break-all font-mono">
                 {finalDigest.split("").map((ch, i) => {
                   const matches = i < digestSoFar.length && digestSoFar[i] === ch;
@@ -328,10 +328,10 @@ export function FinalizeLesson(props: Props) {
             transition={{ duration: 0.4 }}
             className="rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-4"
           >
-            <p className="text-sm font-semibold text-emerald-800">SHA-256 собран!</p>
+            <p className="text-sm font-semibold text-emerald-800">SHA-256 assembled!</p>
             <p className="mt-1 text-xs text-emerald-700">
-              Этот digest идентичен результату crypto.subtle, Node crypto, openssl.
-              Ты вычислил каждую сумму вручную!
+              This digest is identical to the result of crypto.subtle, Node crypto, openssl.
+              You computed every sum by hand!
             </p>
           </motion.div>
         )}

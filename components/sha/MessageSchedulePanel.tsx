@@ -29,8 +29,8 @@ export function MessageSchedulePanel({ W, highlightIndex, guidedFocus = false }:
           guidedFocus ? "ring-2 ring-cyan-300/70 shadow-lg shadow-cyan-100/50" : ""
         }`}
       >
-        <h3 className="mb-2 text-sm font-semibold text-zinc-800">Расписание W</h3>
-        <p className="text-xs text-zinc-500">Появится после этапа разбора блока.</p>
+        <h3 className="mb-2 text-sm font-semibold text-zinc-800">Schedule W</h3>
+        <p className="text-xs text-zinc-500">Will appear after the block parsing step.</p>
       </section>
     );
   }
@@ -48,7 +48,7 @@ export function MessageSchedulePanel({ W, highlightIndex, guidedFocus = false }:
       }`}
     >
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        <h3 className="text-sm font-semibold text-zinc-800">Расписание сообщения</h3>
+        <h3 className="text-sm font-semibold text-zinc-800">Message schedule</h3>
         <span className="text-xs text-zinc-500">
           W<sub className="align-baseline">t</sub>
           {hi >= 0 ? <> — W[{hi}]</> : null}
@@ -116,7 +116,7 @@ export function MessageSchedulePanel({ W, highlightIndex, guidedFocus = false }:
                   transition={{ delay: 0.1 }}
                   className="mt-1 text-xs text-cyan-700"
                 >
-                  Прямо из блока сообщения (M[{hi}])
+                  Directly from message block (M[{hi}])
                 </motion.p>
               )}
             </div>
@@ -187,13 +187,13 @@ export function MessageSchedulePanel({ W, highlightIndex, guidedFocus = false }:
 
       <div className="mt-2 flex items-center gap-3 text-[10px] text-zinc-500">
         <span className="flex items-center gap-1">
-          <span className="inline-block h-2 w-4 rounded-sm bg-cyan-200 ring-1 ring-cyan-500/30" /> текущий
+          <span className="inline-block h-2 w-4 rounded-sm bg-cyan-200 ring-1 ring-cyan-500/30" /> current
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-2 w-4 rounded-sm bg-violet-100 ring-1 ring-violet-300/30" /> источники
+          <span className="inline-block h-2 w-4 rounded-sm bg-violet-100 ring-1 ring-violet-300/30" /> sources
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-2 w-4 rounded-sm bg-zinc-200 opacity-60" /> обработано
+          <span className="inline-block h-2 w-4 rounded-sm bg-zinc-200 opacity-60" /> processed
         </span>
       </div>
     </section>
