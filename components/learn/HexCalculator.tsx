@@ -1,7 +1,7 @@
 "use client";
 
 import { H0, K } from "@/lib/sha256/constants";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type Mode = "hex" | "dec" | "bin";
 type Op = "xor" | "and" | "or" | "add" | "rotr" | "shr" | "not";
@@ -391,6 +391,7 @@ export function HexCalculator() {
   const [valueA, setValueA] = useState("");
   const [valueB, setValueB] = useState("");
   const [op, setOp] = useState<Op>("xor");
+  const [draft, setDraft] = useState("");
 
   const numA = parseNum(valueA, modeA);
   const numB = parseNum(valueB, modeB);
@@ -401,6 +402,15 @@ export function HexCalculator() {
   const openTables = () => setPanel("tables");
   const closePanel = () => setPanel("none");
   const switchToCalcFromTables = () => setPanel("calc");
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem("sha-calc-draft");
+    if (saved) setDraft(saved);
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("sha-calc-draft", draft);
+  }, [draft]);
 
   const modeBtn = (current: Mode, target: Mode, label: string, set: (m: Mode) => void) => (
     <button
@@ -534,6 +544,26 @@ export function HexCalculator() {
               />
             </div>
           )}
+
+          <div>
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-[11px] font-semibold text-zinc-500">Draft</p>
+              <button
+                type="button"
+                onClick={() => setDraft("")}
+                className="rounded px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-800"
+              >
+                Clear
+              </button>
+            </div>
+            <textarea
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              placeholder="Write intermediate steps here (e.g. W[16] = σ1(W[14]) + W[9] + ...)"
+              className="min-h-[82px] w-full resize-y rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 font-mono text-xs text-zinc-900 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+            />
+            <p className="mt-1 text-[10px] text-zinc-500">Saved automatically in your browser.</p>
+          </div>
 
           {hasInput && (
             <div className="rounded-xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-cyan-50 p-3">
