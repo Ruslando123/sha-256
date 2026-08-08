@@ -50,6 +50,6 @@ Auth: [HTTPS + Personal Access Token](https://docs.github.com/en/authentication/
 1. Sign in at [vercel.com](https://vercel.com) with GitHub.
 2. **Add New… → Project** → **Import** your repository.
 3. Framework Preset: **Next.js** (auto-detected), Root Directory: `.`, Build: `next build`, Output: default.
-4. **Deploy**. After the build you get a URL like `https://<project>.vercel.app`.
+4. **Deploy**. After the build you get a URL like `https://<project>.vercel.app`. test
 
 Environment variables are optional for the base app. Each `git push` to `main` usually triggers a new production deploy (unless disabled in settings).
